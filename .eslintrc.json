@@ -1,0 +1,15 @@
+{
+  "extends": ["react-app", "react-app/jest", "plugin:tailwindcss/recommended", "prettier"],
+  "plugins": ["tailwindcss", "prettier"],
+  "rules": {
+    "prettier/prettier": "error"
+  },
+  "overrides": [
+    {
+      "files": ["**/*.stories.*"],
+      "rules": {
+        "import/no-anonymous-default-export": "off"
+      }
+    }
+  ]
+}
