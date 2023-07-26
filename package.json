@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "lint": "eslint . --ext .js,.jsx,ts,tsx ./src --report-unused-disable-directives --max-warnings 0 --fix"
+    "lint": "eslint . --ext .js,.jsx,ts,tsx ./src --report-unused-disable-directives --max-warnings 0 --fix",
+    "prepare": "husky install",
+    "pre-commit": "lint-staged"
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -28,11 +30,17 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
     "eslint-plugin-tailwindcss": "^3.13.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.3",
     "postcss": "^8.4.27",
     "prettier": "^3.0.0",
     "tailwindcss": "^3.3.3",
     "typescript": "^5.0.2",
     "vite": "^4.4.5"
   },
-  "prettier": "@3sidedcube/prettier-config"
+  "prettier": "@3sidedcube/prettier-config",
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx}": "eslint --fix",
+    "index.html": "eslint --fix"
+  }
 }
