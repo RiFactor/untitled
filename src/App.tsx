@@ -2,7 +2,10 @@ import { useState } from "react";
 import "./App.css";
 
 function App() {
-  const [result, setResult] = useState("");
+  const [firstValue, setFirstValue] = useState(Number);
+  const [secondValue, setSecondValue] = useState(Number);
+  const [operand, setOperand] = useState("");
+  const [result, setResult] = useState(Number);
 
   const handleForLoop = () => {
     for (let i = 0; i < 12; i++) {
@@ -11,10 +14,21 @@ function App() {
   };
   const handleCalculation = (value: number) => {
     console.log(value);
+    if (!operand) {
+      setFirstValue(value);
+    }
+    setSecondValue(value);
+  };
+
+  const handleSum = () => {
+    if (!firstValue || !secondValue) return;
+    if (operand === "+") {
+      setResult(firstValue + secondValue);
+    }
   };
 
   // state to remember sequence of events and numbers
-  const numericValues = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const numericValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
   return (
     <div>
@@ -32,7 +46,7 @@ function App() {
           <table>
             <thead>
               <tr>
-                <td>Answer: {result}.</td>
+                <td>Answer: {result && result}</td>
               </tr>
             </thead>
             <tbody>
@@ -56,13 +70,22 @@ function App() {
               </tr>
               <tr>
                 <td>
+                  {/* clear [one digit?] */}
                   <button>C</button>
                 </td>
                 <td>
+                  {/* clear all */}
                   <button>AC</button>
                 </td>
                 <td>
-                  <button>+</button>
+                  <button
+                    onClick={() => {
+                      setOperand("+");
+                      console.log(operand);
+                    }}
+                  >
+                    +
+                  </button>
                 </td>
                 <td>
                   <button>-</button>
@@ -74,7 +97,13 @@ function App() {
                   <button>*</button>
                 </td>
                 <td>
-                  <button>=</button>
+                  <button
+                    onClick={() => {
+                      handleSum();
+                    }}
+                  >
+                    =
+                  </button>
                 </td>
               </tr>
             </tbody>
