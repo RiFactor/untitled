@@ -24,12 +24,12 @@ function App() {
     // if passing a number, update the operand
     if (typeof value === "number") {
       if (calculatorState.firstOperandOrResult) {
-        setCalculatorState({ ...calculatorState, secondOperand: value });
+        setCalculatorState({ ...calculatorState, secondOperand: value, lastUpdated: "secondOperand" });
         console.log(calculatorState);
 
         return;
       }
-      setCalculatorState({ ...calculatorState, firstOperandOrResult: value });
+      setCalculatorState({ ...calculatorState, firstOperandOrResult: value, lastUpdated: "firstOperandOrResult" });
       console.log(calculatorState);
 
       return;
@@ -61,7 +61,7 @@ function App() {
     }
 
     // otherwise just udpate the operator
-    setCalculatorState({ ...calculatorState, operator: value }); // bug created for "="
+    setCalculatorState({ ...calculatorState, operator: value, lastUpdated: "operator" }); // bug created for "="
 
     console.log(calculatorState);
   };
@@ -99,7 +99,13 @@ function App() {
                     // calculatorState.result
                     //   ? calculatorState.result
                     //   :
-                    calculatorState.secondOperand ? calculatorState.secondOperand : calculatorState.firstOperandOrResult
+                    calculatorState.lastUpdated === "clear"
+                      ? 0
+                      : calculatorState.secondOperand
+                      ? calculatorState.secondOperand
+                      : calculatorState.firstOperandOrResult
+                      ? calculatorState.firstOperandOrResult
+                      : 0
                   }
                 </td>
               </tr>
@@ -126,7 +132,29 @@ function App() {
               <tr>
                 <td>
                   {/* clear [one digit?] */}
-                  <button>C</button>
+                  <button
+                    onClick={() => {
+                      if (calculatorState.lastUpdated === "operator") {
+                        setCalculatorState({ ...calculatorState, operator: "", lastUpdated: "clear" });
+                      }
+                      if (calculatorState.lastUpdated === "secondOperand") {
+                        setCalculatorState({ ...calculatorState, secondOperand: 0, lastUpdated: "clear" });
+                      }
+                      if (calculatorState.lastUpdated === "firstOperandOrResult") {
+                        setCalculatorState({ ...calculatorState, firstOperandOrResult: 0, lastUpdated: "clear" });
+                      }
+                      console.log(calculatorState);
+                      // const clear =
+                      //   calculatorState.lastUpdated === "firstOperand"
+                      //     ? "firstOperand"
+                      //     : calculatorState.lastUpdated === "secondOperandOrResult"
+                      //     ? "secondOperandOrResult"
+                      //     : "Operator";
+                      // setCalculatorState({ ...calculatorState });
+                    }}
+                  >
+                    C
+                  </button>
                 </td>
                 <td>
                   {/* clear all */}
