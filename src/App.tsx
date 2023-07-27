@@ -10,7 +10,7 @@ interface Calculator {
 
 function App() {
   const [calculatorState, setCalculatorState] = useState<Calculator>({
-    firstValue: 0,
+    firstValue: 0, // do I want this to be an array
     secondValue: 0,
     operand: "",
     result: 0 // is there a neater way to default these to empty?
@@ -21,17 +21,25 @@ function App() {
   const handleCalculator = (value: number | string) => {
     console.log("calculator");
     if (typeof value === "number") {
-      if (calculatorState.operand === "+") {
+      if (calculatorState.operand) {
         setCalculatorState({ ...calculatorState, secondValue: value });
         return; // do I need this here
       }
       setCalculatorState({ ...calculatorState, firstValue: value });
     }
-    if (value === "=")
+    if (value === "=") {
       setCalculatorState({
         ...calculatorState,
-        result: calculatorState.firstValue + calculatorState.secondValue
+        result:
+          calculatorState.operand === "+"
+            ? calculatorState.firstValue + calculatorState.secondValue
+            : calculatorState.operand === "-"
+            ? calculatorState.firstValue - calculatorState.secondValue
+            : calculatorState.operand === "*"
+            ? calculatorState.firstValue * calculatorState.secondValue
+            : calculatorState.firstValue / calculatorState.secondValue
       });
+    }
   };
 
   const handleForLoop = () => {
@@ -59,7 +67,14 @@ function App() {
           <table>
             <thead>
               <tr>
-                <td>Answer: {calculatorState.result ? calculatorState.result : calculatorState.firstValue}</td>
+                <td>
+                  Answer:{" "}
+                  {calculatorState.result
+                    ? calculatorState.result
+                    : calculatorState.secondValue
+                    ? calculatorState.secondValue
+                    : calculatorState.firstValue}
+                </td>
               </tr>
             </thead>
             <tbody>
@@ -101,13 +116,34 @@ function App() {
                   </button>
                 </td>
                 <td>
-                  <button>-</button>
+                  <button
+                    onClick={() => {
+                      setCalculatorState({ ...calculatorState, operand: "-" });
+                      console.log(calculatorState.operand);
+                    }}
+                  >
+                    -
+                  </button>
                 </td>
                 <td>
-                  <button>/</button>
+                  <button
+                    onClick={() => {
+                      setCalculatorState({ ...calculatorState, operand: "/" });
+                      console.log(calculatorState.operand);
+                    }}
+                  >
+                    /
+                  </button>
                 </td>
                 <td>
-                  <button>*</button>
+                  <button
+                    onClick={() => {
+                      setCalculatorState({ ...calculatorState, operand: "*" });
+                      console.log(calculatorState.operand);
+                    }}
+                  >
+                    *
+                  </button>
                 </td>
                 <td>
                   <button
