@@ -11,12 +11,12 @@ interface Calculator {
 
 function App() {
   const [calculatorState, setCalculatorState] = useState<Calculator>({
-    firstOperandOrResult: 0, // do I want this to be an array
-    secondOperand: 0,
-    operator: "",
-    lastUpdated: ""
+    // firstOperandOrResult: 0, // do I want this to be an array
+    // secondOperand: 0,
+    // operator: "",
+    // lastUpdated: ""
     // result: 0 // is there a neater way to default these to empty?
-  });
+  } as Calculator);
 
   //combine all these functions to detect the input and then perform actions accordingly
 
@@ -133,12 +133,12 @@ function App() {
                   <button
                     onClick={() => {
                       setCalculatorState({
-                        firstOperandOrResult: 0,
-                        secondOperand: 0,
-                        operator: "",
-                        lastUpdated: ""
+                        // firstOperandOrResult: 0,
+                        // secondOperand: 0,
+                        // operator: "",
+                        // lastUpdated: ""
                         // , result: 0
-                      });
+                      } as Calculator);
                     }}
                   >
                     AC
