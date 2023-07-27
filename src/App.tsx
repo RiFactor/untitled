@@ -1,6 +1,9 @@
 import { useState } from "react";
 import "./App.css";
 
+// ToDo extract reusable functions
+// UI
+
 interface Calculator {
   firstOperandOrResult: number; // do I want this to be an array
   secondOperand: number;
@@ -45,6 +48,7 @@ function App() {
     }
 
     // if not passing a number but passing an operator, check to see if a calculation can be made between 2 numbers
+
     if (calculatorState.secondOperand) {
       const sum =
         calculatorState.operator === "+"
@@ -76,9 +80,16 @@ function App() {
     }
 
     // otherwise just udpate the operator
+    if (value === "+/-") {
+      if (calculatorState.secondOperand) {
+        setCalculatorState({ ...calculatorState, secondOperand: calculatorState.secondOperand * -1 });
+        return;
+      }
+      setCalculatorState({ ...calculatorState, firstOperandOrResult: calculatorState.firstOperandOrResult * -1 });
+      return;
+    }
     setCalculatorState({ ...calculatorState, operator: value, lastUpdated: "operator" });
-
-    console.log(calculatorState);
+    return;
   };
 
   const handleForLoop = () => {
@@ -217,6 +228,16 @@ function App() {
                     }}
                   >
                     =
+                  </button>
+                </td>
+                <td>
+                  <button
+                    onClick={() => {
+                      handleCalculator("+/-");
+                      console.log(calculatorState.operator);
+                    }}
+                  >
+                    +/-
                   </button>
                 </td>
               </tr>
