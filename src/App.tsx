@@ -240,6 +240,17 @@ function App() {
                     +/-
                   </button>
                 </td>
+                <td>
+                  {/* ToDo Bonus Feature */}
+                  {/* <button
+                    onClick={() => {
+                      handleCalculator(".");
+                      console.log(calculatorState.operator);
+                    }}
+                  >
+                    .
+                  </button> */}
+                </td>
               </tr>
             </tbody>
           </table>
