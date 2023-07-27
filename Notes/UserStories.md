@@ -1,3 +1,7 @@
+### Constraints
+
+You may not use the eval() function to execute calculations
+
 ### User Stories
 
 - [] User can see a display showing the current number entered or the result of the last operation.

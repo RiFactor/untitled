@@ -7,6 +7,7 @@ function App() {
   const [operand, setOperand] = useState("");
   const [result, setResult] = useState(Number);
 
+  //combine all these functions to detect the input and then perform actions accordingly
   const handleForLoop = () => {
     for (let i = 0; i < 12; i++) {
       console.log(i);
