@@ -1,30 +1,42 @@
 import { useState } from "react";
 import "./App.css";
 
+interface Calculator {
+  firstValue: number;
+  secondValue: number;
+  operand: string;
+  result: number;
+}
+
 function App() {
-  const [firstValue, setFirstValue] = useState(Number);
-  const [secondValue, setSecondValue] = useState(Number);
-  const [operand, setOperand] = useState("");
-  const [result, setResult] = useState(Number);
+  const [calculatorState, setCalculatorState] = useState<Calculator>({
+    firstValue: 0,
+    secondValue: 0,
+    operand: "",
+    result: 0 // is there a neater way to default these to empty?
+  });
 
   //combine all these functions to detect the input and then perform actions accordingly
+
+  const handleCalculator = (value: number | string) => {
+    console.log("calculator");
+    if (typeof value === "number") {
+      if (calculatorState.operand === "+") {
+        setCalculatorState({ ...calculatorState, secondValue: value });
+        return; // do I need this here
+      }
+      setCalculatorState({ ...calculatorState, firstValue: value });
+    }
+    if (value === "=")
+      setCalculatorState({
+        ...calculatorState,
+        result: calculatorState.firstValue + calculatorState.secondValue
+      });
+  };
+
   const handleForLoop = () => {
     for (let i = 0; i < 12; i++) {
       console.log(i);
-    }
-  };
-  const handleCalculation = (value: number) => {
-    console.log(value);
-    if (!operand) {
-      setFirstValue(value);
-    }
-    setSecondValue(value);
-  };
-
-  const handleSum = () => {
-    if (!firstValue || !secondValue) return;
-    if (operand === "+") {
-      setResult(firstValue + secondValue);
     }
   };
 
@@ -47,7 +59,7 @@ function App() {
           <table>
             <thead>
               <tr>
-                <td>Answer: {result && result}</td>
+                <td>Answer: {calculatorState.result ? calculatorState.result : calculatorState.firstValue}</td>
               </tr>
             </thead>
             <tbody>
@@ -61,7 +73,7 @@ function App() {
                       // find a way to get it to display a max of 3 per row
                       // do a for loop to find out if it needs to go on a new row
                       // for (i = 0; i < 12; i ++) {
-                      <button key={number} onClick={() => handleCalculation(number)}>
+                      <button key={number} onClick={() => handleCalculator(number)}>
                         {number}
                       </button>
                       // }
@@ -81,8 +93,8 @@ function App() {
                 <td>
                   <button
                     onClick={() => {
-                      setOperand("+");
-                      console.log(operand);
+                      setCalculatorState({ ...calculatorState, operand: "+" });
+                      console.log(calculatorState.operand);
                     }}
                   >
                     +
@@ -100,7 +112,8 @@ function App() {
                 <td>
                   <button
                     onClick={() => {
-                      handleSum();
+                      handleCalculator("=");
+                      console.log(calculatorState.operand);
                     }}
                   >
                     =
