@@ -11,21 +11,36 @@ interface Calculator {
 
 function App() {
   const [calculatorState, setCalculatorState] = useState<Calculator>({} as Calculator); // is this ok and better than setting default 0 / "" values
+  const [error, setError] = useState(Boolean);
 
   //combine all these functions to detect the input and then perform actions accordingly
 
   const handleCalculator = (value: number | string) => {
+    if (error) setError(false);
     // if passing a number, update the operand
     if (typeof value === "number") {
-      if (calculatorState.firstOperandOrResult) {
-        setCalculatorState({ ...calculatorState, secondOperand: value, lastUpdated: "secondOperand" });
-        console.log(calculatorState);
-
+      if (calculatorState.operator) {
+        if (!calculatorState.secondOperand) {
+          setCalculatorState({ ...calculatorState, secondOperand: value, lastUpdated: "secondOperand" });
+          return; // is there a better way to not write return constantly
+        }
+        // this can become a reusable function
+        if (calculatorState.secondOperand.toString().length > 7) return;
+        const singleValue = parseInt([calculatorState.secondOperand, value].join(""));
+        setCalculatorState({ ...calculatorState, secondOperand: singleValue, lastUpdated: "secondOperand" });
         return;
       }
-      setCalculatorState({ ...calculatorState, firstOperandOrResult: value, lastUpdated: "firstOperandOrResult" });
-      console.log(calculatorState);
-
+      if (!calculatorState.firstOperandOrResult) {
+        setCalculatorState({ ...calculatorState, firstOperandOrResult: value, lastUpdated: "firstOperandOrResult" });
+        return;
+      }
+      if (calculatorState.firstOperandOrResult.toString().length > 7) return;
+      const singleValue = parseInt([calculatorState.firstOperandOrResult, value].join(""));
+      setCalculatorState({
+        ...calculatorState,
+        firstOperandOrResult: singleValue,
+        lastUpdated: "firstOperandOrResult"
+      });
       return;
     }
 
@@ -39,6 +54,12 @@ function App() {
           : calculatorState.operator === "*"
           ? calculatorState.firstOperandOrResult * calculatorState.secondOperand
           : calculatorState.firstOperandOrResult / calculatorState.secondOperand;
+      console.log("length of sum", sum.toString().length);
+      if (sum.toString().length > 8) {
+        setCalculatorState({} as Calculator);
+        setError(true);
+        return; // or should the state be wiped completely
+      }
 
       setCalculatorState({
         ...calculatorState,
@@ -46,6 +67,7 @@ function App() {
         firstOperandOrResult: sum,
         secondOperand: 0,
         // , // reset to enable furuther operations
+        // operator: value === "=" ? "" : value
         operator: value
       });
       console.log(calculatorState);
@@ -88,13 +110,18 @@ function App() {
               <tr>
                 <td>
                   Answer:{" "}
-                  {calculatorState.lastUpdated === "clear"
-                    ? 0
-                    : calculatorState.secondOperand
-                    ? calculatorState.secondOperand
-                    : calculatorState.firstOperandOrResult
-                    ? calculatorState.firstOperandOrResult
-                    : 0}
+                  {
+                    // calculatorState.lastUpdated === "clear"
+                    //   ? 0
+                    //   :
+                    error
+                      ? "ERR"
+                      : calculatorState.secondOperand
+                      ? calculatorState.secondOperand
+                      : calculatorState.firstOperandOrResult
+                      ? calculatorState.firstOperandOrResult
+                      : 0
+                  }
                 </td>
               </tr>
             </thead>
