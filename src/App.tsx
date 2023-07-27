@@ -2,49 +2,66 @@ import { useState } from "react";
 import "./App.css";
 
 interface Calculator {
-  firstOperand: number;
+  firstOperandOrResult: number;
   secondOperand: number;
   operator: string;
-  result: number;
+  // result: number;
 }
 
 function App() {
   const [calculatorState, setCalculatorState] = useState<Calculator>({
-    firstOperand: 0, // do I want this to be an array
+    firstOperandOrResult: 0, // do I want this to be an array
     secondOperand: 0,
-    operator: "",
-    result: 0 // is there a neater way to default these to empty?
+    operator: ""
+    // result: 0 // is there a neater way to default these to empty?
   });
 
   //combine all these functions to detect the input and then perform actions accordingly
 
   const handleCalculator = (value: number | string) => {
-    console.log("calculator");
+    // if passing a number, update the operand
     if (typeof value === "number") {
-      if (calculatorState.operator) {
+      if (calculatorState.firstOperandOrResult) {
         setCalculatorState({ ...calculatorState, secondOperand: value });
-        return; // do I need this here
+        console.log(calculatorState);
+
+        return;
       }
-      setCalculatorState({ ...calculatorState, firstOperand: value });
+      setCalculatorState({ ...calculatorState, firstOperandOrResult: value });
+      console.log(calculatorState);
+
+      return;
     }
-    if (value === "=") {
+
+    // if not passing a number but passing an operator, check to see if a calculation can be made between 2 numbers
+    if (calculatorState.secondOperand) {
       const sum =
         calculatorState.operator === "+"
-          ? calculatorState.firstOperand + calculatorState.secondOperand
+          ? calculatorState.firstOperandOrResult + calculatorState.secondOperand
           : calculatorState.operator === "-"
-          ? calculatorState.firstOperand - calculatorState.secondOperand
+          ? calculatorState.firstOperandOrResult - calculatorState.secondOperand
           : calculatorState.operator === "*"
-          ? calculatorState.firstOperand * calculatorState.secondOperand
-          : calculatorState.firstOperand / calculatorState.secondOperand;
+          ? calculatorState.firstOperandOrResult * calculatorState.secondOperand
+          : // bug here!
+            calculatorState.firstOperandOrResult / calculatorState.secondOperand;
 
       setCalculatorState({
         ...calculatorState,
-        result: sum,
-        firstOperand: sum,
-        secondOperand: 0, // reset to enable furuther operations
-        operator: ""
+        // result: sum, // is this needed?
+        firstOperandOrResult: sum,
+        secondOperand: 0,
+        // , // reset to enable furuther operations
+        operator: value
       });
+      console.log(calculatorState);
+
+      return;
     }
+
+    // otherwise just udpate the operator
+    setCalculatorState({ ...calculatorState, operator: value }); // bug created for "="
+
+    console.log(calculatorState);
   };
 
   const handleForLoop = () => {
@@ -69,16 +86,19 @@ function App() {
           <h1>Calculator</h1>
           <button onClick={() => handleForLoop()}>Click Me</button>
 
-          <table>
+          <table
+          // className="max-w-[9.4rem]"
+          >
             <thead>
               <tr>
                 <td>
                   Answer:{" "}
-                  {calculatorState.result
-                    ? calculatorState.result
-                    : calculatorState.secondOperand
-                    ? calculatorState.secondOperand
-                    : calculatorState.firstOperand}
+                  {
+                    // calculatorState.result
+                    //   ? calculatorState.result
+                    //   :
+                    calculatorState.secondOperand ? calculatorState.secondOperand : calculatorState.firstOperandOrResult
+                  }
                 </td>
               </tr>
             </thead>
@@ -110,7 +130,12 @@ function App() {
                   {/* clear all */}
                   <button
                     onClick={() => {
-                      setCalculatorState({ firstOperand: 0, secondOperand: 0, operator: "", result: 0 });
+                      setCalculatorState({
+                        firstOperandOrResult: 0,
+                        secondOperand: 0,
+                        operator: ""
+                        // , result: 0
+                      });
                     }}
                   >
                     AC
@@ -119,8 +144,7 @@ function App() {
                 <td>
                   <button
                     onClick={() => {
-                      setCalculatorState({ ...calculatorState, operator: "+" });
-                      console.log(calculatorState.operator);
+                      handleCalculator("+");
                     }}
                   >
                     +
@@ -129,8 +153,7 @@ function App() {
                 <td>
                   <button
                     onClick={() => {
-                      setCalculatorState({ ...calculatorState, operator: "-" });
-                      console.log(calculatorState.operator);
+                      handleCalculator("-");
                     }}
                   >
                     -
@@ -139,8 +162,7 @@ function App() {
                 <td>
                   <button
                     onClick={() => {
-                      setCalculatorState({ ...calculatorState, operator: "/" });
-                      console.log(calculatorState.operator);
+                      handleCalculator("/");
                     }}
                   >
                     /
@@ -149,8 +171,7 @@ function App() {
                 <td>
                   <button
                     onClick={() => {
-                      setCalculatorState({ ...calculatorState, operator: "*" });
-                      console.log(calculatorState.operator);
+                      handleCalculator("*");
                     }}
                   >
                     *
