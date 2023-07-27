@@ -3,6 +3,9 @@ import "./App.css";
 
 // ToDo extract reusable functions
 // UI
+// EdgeCase: enter number, then operator and clear operator w/o selecting a new operator: enter number should clear prev number
+// EdgeCase: above - iPhone will just remember the operator if a new one isn't provided
+// OR just overwrite operator, don't need clear function for it! :)
 
 interface Calculator {
   firstOperandOrResult: number; // do I want this to be an array
