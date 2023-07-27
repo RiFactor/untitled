@@ -2,17 +2,17 @@ import { useState } from "react";
 import "./App.css";
 
 interface Calculator {
-  firstValue: number;
-  secondValue: number;
-  operand: string;
+  firstOperand: number;
+  secondOperand: number;
+  operator: string;
   result: number;
 }
 
 function App() {
   const [calculatorState, setCalculatorState] = useState<Calculator>({
-    firstValue: 0, // do I want this to be an array
-    secondValue: 0,
-    operand: "",
+    firstOperand: 0, // do I want this to be an array
+    secondOperand: 0,
+    operator: "",
     result: 0 // is there a neater way to default these to empty?
   });
 
@@ -21,23 +21,28 @@ function App() {
   const handleCalculator = (value: number | string) => {
     console.log("calculator");
     if (typeof value === "number") {
-      if (calculatorState.operand) {
-        setCalculatorState({ ...calculatorState, secondValue: value });
+      if (calculatorState.operator) {
+        setCalculatorState({ ...calculatorState, secondOperand: value });
         return; // do I need this here
       }
-      setCalculatorState({ ...calculatorState, firstValue: value });
+      setCalculatorState({ ...calculatorState, firstOperand: value });
     }
     if (value === "=") {
+      const sum =
+        calculatorState.operator === "+"
+          ? calculatorState.firstOperand + calculatorState.secondOperand
+          : calculatorState.operator === "-"
+          ? calculatorState.firstOperand - calculatorState.secondOperand
+          : calculatorState.operator === "*"
+          ? calculatorState.firstOperand * calculatorState.secondOperand
+          : calculatorState.firstOperand / calculatorState.secondOperand;
+
       setCalculatorState({
         ...calculatorState,
-        result:
-          calculatorState.operand === "+"
-            ? calculatorState.firstValue + calculatorState.secondValue
-            : calculatorState.operand === "-"
-            ? calculatorState.firstValue - calculatorState.secondValue
-            : calculatorState.operand === "*"
-            ? calculatorState.firstValue * calculatorState.secondValue
-            : calculatorState.firstValue / calculatorState.secondValue
+        result: sum,
+        firstOperand: sum,
+        secondOperand: 0, // reset to enable furuther operations
+        operator: ""
       });
     }
   };
@@ -71,9 +76,9 @@ function App() {
                   Answer:{" "}
                   {calculatorState.result
                     ? calculatorState.result
-                    : calculatorState.secondValue
-                    ? calculatorState.secondValue
-                    : calculatorState.firstValue}
+                    : calculatorState.secondOperand
+                    ? calculatorState.secondOperand
+                    : calculatorState.firstOperand}
                 </td>
               </tr>
             </thead>
@@ -103,13 +108,19 @@ function App() {
                 </td>
                 <td>
                   {/* clear all */}
-                  <button>AC</button>
+                  <button
+                    onClick={() => {
+                      setCalculatorState({ firstOperand: 0, secondOperand: 0, operator: "", result: 0 });
+                    }}
+                  >
+                    AC
+                  </button>
                 </td>
                 <td>
                   <button
                     onClick={() => {
-                      setCalculatorState({ ...calculatorState, operand: "+" });
-                      console.log(calculatorState.operand);
+                      setCalculatorState({ ...calculatorState, operator: "+" });
+                      console.log(calculatorState.operator);
                     }}
                   >
                     +
@@ -118,8 +129,8 @@ function App() {
                 <td>
                   <button
                     onClick={() => {
-                      setCalculatorState({ ...calculatorState, operand: "-" });
-                      console.log(calculatorState.operand);
+                      setCalculatorState({ ...calculatorState, operator: "-" });
+                      console.log(calculatorState.operator);
                     }}
                   >
                     -
@@ -128,8 +139,8 @@ function App() {
                 <td>
                   <button
                     onClick={() => {
-                      setCalculatorState({ ...calculatorState, operand: "/" });
-                      console.log(calculatorState.operand);
+                      setCalculatorState({ ...calculatorState, operator: "/" });
+                      console.log(calculatorState.operator);
                     }}
                   >
                     /
@@ -138,8 +149,8 @@ function App() {
                 <td>
                   <button
                     onClick={() => {
-                      setCalculatorState({ ...calculatorState, operand: "*" });
-                      console.log(calculatorState.operand);
+                      setCalculatorState({ ...calculatorState, operator: "*" });
+                      console.log(calculatorState.operator);
                     }}
                   >
                     *
@@ -149,7 +160,7 @@ function App() {
                   <button
                     onClick={() => {
                       handleCalculator("=");
-                      console.log(calculatorState.operand);
+                      console.log(calculatorState.operator);
                     }}
                   >
                     =
