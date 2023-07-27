@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./App.css";
 
 interface Calculator {
-  firstOperandOrResult: number;
+  firstOperandOrResult: number; // do I want this to be an array
   secondOperand: number;
   operator: string;
   lastUpdated: string;
@@ -10,13 +10,7 @@ interface Calculator {
 }
 
 function App() {
-  const [calculatorState, setCalculatorState] = useState<Calculator>({
-    // firstOperandOrResult: 0, // do I want this to be an array
-    // secondOperand: 0,
-    // operator: "",
-    // lastUpdated: ""
-    // result: 0 // is there a neater way to default these to empty?
-  } as Calculator);
+  const [calculatorState, setCalculatorState] = useState<Calculator>({} as Calculator); // is this ok and better than setting default 0 / "" values
 
   //combine all these functions to detect the input and then perform actions accordingly
 
@@ -44,8 +38,7 @@ function App() {
           ? calculatorState.firstOperandOrResult - calculatorState.secondOperand
           : calculatorState.operator === "*"
           ? calculatorState.firstOperandOrResult * calculatorState.secondOperand
-          : // bug here!
-            calculatorState.firstOperandOrResult / calculatorState.secondOperand;
+          : calculatorState.firstOperandOrResult / calculatorState.secondOperand;
 
       setCalculatorState({
         ...calculatorState,
@@ -61,7 +54,7 @@ function App() {
     }
 
     // otherwise just udpate the operator
-    setCalculatorState({ ...calculatorState, operator: value, lastUpdated: "operator" }); // bug created for "="
+    setCalculatorState({ ...calculatorState, operator: value, lastUpdated: "operator" });
 
     console.log(calculatorState);
   };
@@ -95,18 +88,13 @@ function App() {
               <tr>
                 <td>
                   Answer:{" "}
-                  {
-                    // calculatorState.result
-                    //   ? calculatorState.result
-                    //   :
-                    calculatorState.lastUpdated === "clear"
-                      ? 0
-                      : calculatorState.secondOperand
-                      ? calculatorState.secondOperand
-                      : calculatorState.firstOperandOrResult
-                      ? calculatorState.firstOperandOrResult
-                      : 0
-                  }
+                  {calculatorState.lastUpdated === "clear"
+                    ? 0
+                    : calculatorState.secondOperand
+                    ? calculatorState.secondOperand
+                    : calculatorState.firstOperandOrResult
+                    ? calculatorState.firstOperandOrResult
+                    : 0}
                 </td>
               </tr>
             </thead>
@@ -131,9 +119,9 @@ function App() {
               </tr>
               <tr>
                 <td>
-                  {/* clear [one digit?] */}
                   <button
                     onClick={() => {
+                      // ToDo refactor?
                       if (calculatorState.lastUpdated === "operator") {
                         setCalculatorState({ ...calculatorState, operator: "", lastUpdated: "clear" });
                       }
@@ -144,29 +132,15 @@ function App() {
                         setCalculatorState({ ...calculatorState, firstOperandOrResult: 0, lastUpdated: "clear" });
                       }
                       console.log(calculatorState);
-                      // const clear =
-                      //   calculatorState.lastUpdated === "firstOperand"
-                      //     ? "firstOperand"
-                      //     : calculatorState.lastUpdated === "secondOperandOrResult"
-                      //     ? "secondOperandOrResult"
-                      //     : "Operator";
-                      // setCalculatorState({ ...calculatorState });
                     }}
                   >
                     C
                   </button>
                 </td>
                 <td>
-                  {/* clear all */}
                   <button
                     onClick={() => {
-                      setCalculatorState({
-                        // firstOperandOrResult: 0,
-                        // secondOperand: 0,
-                        // operator: "",
-                        // lastUpdated: ""
-                        // , result: 0
-                      } as Calculator);
+                      setCalculatorState({} as Calculator); // same here
                     }}
                   >
                     AC
