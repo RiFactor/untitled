@@ -5,6 +5,7 @@ interface Calculator {
   firstOperandOrResult: number;
   secondOperand: number;
   operator: string;
+  lastUpdated: string;
   // result: number;
 }
 
@@ -12,7 +13,8 @@ function App() {
   const [calculatorState, setCalculatorState] = useState<Calculator>({
     firstOperandOrResult: 0, // do I want this to be an array
     secondOperand: 0,
-    operator: ""
+    operator: "",
+    lastUpdated: ""
     // result: 0 // is there a neater way to default these to empty?
   });
 
@@ -133,7 +135,8 @@ function App() {
                       setCalculatorState({
                         firstOperandOrResult: 0,
                         secondOperand: 0,
-                        operator: ""
+                        operator: "",
+                        lastUpdated: ""
                         // , result: 0
                       });
                     }}
