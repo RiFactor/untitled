@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./App.css";
+import Card from "./components/Card";
 
 // ToDo extract reusable functions
 // UI
@@ -14,6 +15,9 @@ interface Calculator {
   lastUpdated: string;
   // result: number;
 }
+
+// state to remember sequence of events and numbers
+const numericValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 function App() {
   const [calculatorState, setCalculatorState] = useState<Calculator>({} as Calculator); // is this ok and better than setting default 0 / "" values
@@ -54,6 +58,7 @@ function App() {
 
     if (calculatorState.secondOperand) {
       const sum =
+        // switch-case; if-else statements are better
         calculatorState.operator === "+"
           ? calculatorState.firstOperandOrResult + calculatorState.secondOperand
           : calculatorState.operator === "-"
@@ -101,9 +106,6 @@ function App() {
     }
   };
 
-  // state to remember sequence of events and numbers
-  const numericValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-
   return (
     <div>
       <div>
@@ -115,6 +117,7 @@ function App() {
         </nav>
         <div>
           <h1>Calculator</h1>
+          <Card title="heading" description="text here" />
           <button onClick={() => handleForLoop()}>Click Me</button>
 
           <table
