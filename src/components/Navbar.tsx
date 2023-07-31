@@ -1,14 +1,22 @@
-import { Link } from "react-router-dom";
-import ColorModeSwitch from "./ColorModeSwitch";
-// import ColorModeSwitch from "components/ColorModeSwitch"; // Question -- help get absolute referencing
+import { NavLink } from "react-router-dom";
+import ColorModeSwitch from "components/ColorModeSwitch";
 
 const Navbar = () => {
   return (
-    <nav className="flex justify-between gap-2">
-      {/* links will be better */}
+    <nav className="flex justify-between gap-2 p-4">
       <div className="flex gap-5">
-        <Link to="/">Home</Link>
-        <Link to="/calculator">Calculator</Link>
+        <NavLink
+          to="/"
+          className={({ isActive }) => `nav-link font-bold w-18 ${isActive && "text-cyan-600 underline "} `}
+        >
+          Home
+        </NavLink>
+        <NavLink
+          className={({ isActive }) => `nav-link font-bold w-18 ${isActive && "text-cyan-600 font-bold underline"} `}
+          to="/calculator"
+        >
+          Calculator
+        </NavLink>
       </div>
       <ColorModeSwitch />
     </nav>
