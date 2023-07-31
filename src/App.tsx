@@ -18,6 +18,9 @@ interface Calculator {
 
 // state to remember sequence of events and numbers
 const numericValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+const reverseNumericValues = numericValues.reverse();
+const bonusOperators = ["C", "AC", "+/-"];
+const operators = ["/", "*", "-", "+", "="];
 
 function App() {
   const [calculatorState, setCalculatorState] = useState<Calculator>({} as Calculator); // is this ok and better than setting default 0 / "" values
@@ -120,13 +123,12 @@ function App() {
           <Card title="heading" description="text here" />
           <button onClick={() => handleForLoop()}>Click Me</button>
 
-          <table
-          // className="max-w-[9.4rem]"
-          >
-            <thead>
-              <tr>
-                <td>
-                  Answer:{" "}
+          <div className="calculator md p-4 md:w-1/2" style={{ maxWidth: "720px" }}>
+            <div
+              className={` overflow-hidden rounded-md border-2 border-gray-200 border-opacity-60 dark:border-gray-700`}
+            >
+              <div className="p-6">
+                <h2 className="mb-3 text-2xl font-bold leading-8 tracking-tight">
                   {
                     // calculatorState.lastUpdated === "clear"
                     //   ? 0
@@ -139,127 +141,88 @@ function App() {
                       ? calculatorState.firstOperandOrResult
                       : 0
                   }
-                </td>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th></th>
-              </tr>
-              <tr>
-                <td>
-                  {numericValues.map(number => {
-                    return (
-                      // find a way to get it to display a max of 3 per row
-                      // do a for loop to find out if it needs to go on a new row
-                      // for (i = 0; i < 12; i ++) {
-                      <button key={number} onClick={() => handleCalculator(number)}>
-                        {number}
+                </h2>
+                <div className="keypad text-white-700 flex flex-row font-bold">
+                  {/* want flex flex-row-reverse? */}
+
+                  <div className="numbers-and-operators flex flex-col gap-2">
+                    <div className="bonus-operators flex gap-2">
+                      <button
+                        className="keypad text-white-700 w-16 p-2 font-bold"
+                        onClick={() => {
+                          // ToDo refactor?
+                          if (calculatorState.lastUpdated === "operator") {
+                            setCalculatorState({ ...calculatorState, operator: "", lastUpdated: "clear" });
+                          }
+                          if (calculatorState.lastUpdated === "secondOperand") {
+                            setCalculatorState({ ...calculatorState, secondOperand: 0, lastUpdated: "clear" });
+                          }
+                          if (calculatorState.lastUpdated === "firstOperandOrResult") {
+                            setCalculatorState({ ...calculatorState, firstOperandOrResult: 0, lastUpdated: "clear" });
+                          }
+                          console.log(calculatorState);
+                        }}
+                      >
+                        C
                       </button>
-                      // }
-                    );
-                  })}
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <button
-                    onClick={() => {
-                      // ToDo refactor?
-                      if (calculatorState.lastUpdated === "operator") {
-                        setCalculatorState({ ...calculatorState, operator: "", lastUpdated: "clear" });
-                      }
-                      if (calculatorState.lastUpdated === "secondOperand") {
-                        setCalculatorState({ ...calculatorState, secondOperand: 0, lastUpdated: "clear" });
-                      }
-                      if (calculatorState.lastUpdated === "firstOperandOrResult") {
-                        setCalculatorState({ ...calculatorState, firstOperandOrResult: 0, lastUpdated: "clear" });
-                      }
-                      console.log(calculatorState);
-                    }}
-                  >
-                    C
-                  </button>
-                </td>
-                <td>
-                  <button
-                    onClick={() => {
-                      setCalculatorState({} as Calculator); // same here
-                    }}
-                  >
-                    AC
-                  </button>
-                </td>
-                <td>
-                  <button
-                    onClick={() => {
-                      handleCalculator("+");
-                    }}
-                  >
-                    +
-                  </button>
-                </td>
-                <td>
-                  <button
-                    onClick={() => {
-                      handleCalculator("-");
-                    }}
-                  >
-                    -
-                  </button>
-                </td>
-                <td>
-                  <button
-                    onClick={() => {
-                      handleCalculator("/");
-                    }}
-                  >
-                    /
-                  </button>
-                </td>
-                <td>
-                  <button
-                    onClick={() => {
-                      handleCalculator("*");
-                    }}
-                  >
-                    *
-                  </button>
-                </td>
-                <td>
-                  <button
-                    onClick={() => {
-                      handleCalculator("=");
-                      console.log(calculatorState.operator);
-                    }}
-                  >
-                    =
-                  </button>
-                </td>
-                <td>
-                  <button
-                    onClick={() => {
-                      handleCalculator("+/-");
-                      console.log(calculatorState.operator);
-                    }}
-                  >
-                    +/-
-                  </button>
-                </td>
-                <td>
-                  {/* ToDo Bonus Feature */}
-                  {/* <button
-                    onClick={() => {
-                      handleCalculator(".");
-                      console.log(calculatorState.operator);
-                    }}
-                  >
-                    .
-                  </button> */}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                      <button
+                        className="keypad text-white-700 w-16 p-2 font-bold"
+                        onClick={() => {
+                          setCalculatorState({} as Calculator);
+                          setError(false); // same here
+                        }}
+                      >
+                        AC
+                      </button>
+                      <button
+                        className="keypad text-white-700 w-16 p-2 font-bold"
+                        onClick={() => {
+                          handleCalculator("+/-");
+                          console.log(calculatorState.operator);
+                        }}
+                      >
+                        +/-
+                      </button>
+                    </div>
+
+                    {/* why isn't this style working */}
+                    <div className="gap-2">
+                      {reverseNumericValues.reverse().map(number => {
+                        return (
+                          // find a way to get it to display a max of 3 per row
+                          // do a for loop to find out if it needs to go on a new row
+                          // for (i = 0; i < 12; i ++) {
+                          <button
+                            className="keypad text-white-700 w-16 gap-20 p-2 font-bold"
+                            key={number}
+                            onClick={() => handleCalculator(number)}
+                          >
+                            {number}
+                          </button>
+                          // }
+                        );
+                      })}
+                    </div>
+                  </div>
+                  <div className="keypad text-white-700 w-16 p-2 font-bold">
+                    {operators.map((operator, index) => {
+                      // question -- should you use index?
+                      return (
+                        <button
+                          key={index}
+                          onClick={() => {
+                            handleCalculator(operator);
+                          }}
+                        >
+                          {operator}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
