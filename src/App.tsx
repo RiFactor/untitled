@@ -1,7 +1,7 @@
 import "./App.css";
 import Card from "./components/Card";
-import Calculator from "./components/Calculator";
 import Navbar from "./components/Navbar";
+import Calculator from "./components/Calculator";
 
 // ToDo extract reusable functions
 // UI
@@ -22,12 +22,12 @@ function App() {
     <div className="flex h-screen w-screen flex-col gap-4 p-4">
       <Navbar />
       <div className="flex w-screen flex-col p-2">
-        <div>
+        {/* <div>
           <Card title="heading" description="text here" />
           <button className="rounded border border-neutral-50 p-2" onClick={() => handleForLoop()}>
             Click Me
           </button>
-        </div>
+        </div> */}
         <Calculator />
       </div>
     </div>

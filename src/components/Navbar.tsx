@@ -1,13 +1,14 @@
+import { Link } from "react-router-dom";
 import ColorModeSwitch from "./ColorModeSwitch";
+// import ColorModeSwitch from "components/ColorModeSwitch"; // Question -- help get absolute referencing
 
 const Navbar = () => {
   return (
-    <nav className="flex justify-between gap-2 px-2">
+    <nav className="flex justify-between gap-2">
       {/* links will be better */}
       <div className="flex gap-5">
-        <a href="/">Home</a>
-        <a href="/">About</a>
-        <a href="/"> Contact Us</a>
+        <Link to="/">Home</Link>
+        <Link to="/calculator">Calculator</Link>
       </div>
       <ColorModeSwitch />
     </nav>

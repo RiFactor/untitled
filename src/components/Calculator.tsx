@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-interface Calculator {
+interface ICalculator {
   firstOperandOrResult: number; // do I want this to be an array
   secondOperand: number;
   operator: string;
@@ -14,7 +14,7 @@ const reverseNumericValues = numericValues.reverse();
 const operators = ["/", "*", "-", "+", "="];
 
 const Calculator = () => {
-  const [calculatorState, setCalculatorState] = useState<Calculator>({} as Calculator); // is this ok and better than setting default 0 / "" values
+  const [calculatorState, setCalculatorState] = useState<ICalculator>({} as ICalculator); // is this ok and better than setting default 0 / "" values
   const [error, setError] = useState(Boolean);
 
   const handleCalculator = (value: number | string) => {
@@ -60,7 +60,7 @@ const Calculator = () => {
           : calculatorState.firstOperandOrResult / calculatorState.secondOperand;
       console.log("length of sum", sum.toString().length);
       if (sum.toString().length > 8) {
-        setCalculatorState({} as Calculator);
+        setCalculatorState({} as ICalculator);
         setError(true);
         return; // or should the state be wiped completely
       }
@@ -95,7 +95,7 @@ const Calculator = () => {
   return (
     <>
       {/* CALCULATOR */}
-      <div className="flex max-w-[250px] flex-col gap-2 rounded-md border p-4 dark:border-neutral-700">
+      <div className="m-4 flex max-w-[250px] flex-col gap-2 rounded-md border bg-slate-800 p-4 dark:border-neutral-700">
         {/* SCREEN */}
         <h2 className="mb-3 rounded-md border p-3.5 text-right text-4xl font-bold leading-8 tracking-tight">
           {
@@ -118,7 +118,7 @@ const Calculator = () => {
             {/* pl-2 is a hack */}
             <div className="flex gap-4 pl-2">
               <button
-                className="h-10 w-10 rounded bg-gray-700 p-2 font-bold text-amber-600"
+                className="h-10 w-10 rounded bg-gray-900 p-2 font-bold text-amber-600"
                 onClick={() => {
                   // ToDo refactor?
                   if (calculatorState.lastUpdated === "operator") {
@@ -136,16 +136,16 @@ const Calculator = () => {
                 C
               </button>
               <button
-                className="h-10 w-10 rounded bg-gray-700 p-2 font-bold text-amber-600"
+                className="h-10 w-10 rounded bg-gray-900 p-2 font-bold text-amber-600"
                 onClick={() => {
-                  setCalculatorState({} as Calculator);
+                  setCalculatorState({} as ICalculator);
                   setError(false); // same here
                 }}
               >
                 AC
               </button>
               <button
-                className="h-10 w-10 rounded bg-gray-700 p-2 font-bold text-amber-600"
+                className="h-10 w-10 rounded bg-gray-900 p-2 font-bold text-amber-600"
                 onClick={() => {
                   handleCalculator("+/-");
                   console.log(calculatorState.operator);
@@ -163,7 +163,7 @@ const Calculator = () => {
                   // do a for loop to find out if it needs to go on a new row
                   // for (i = 0; i < 12; i ++) {
                   <button
-                    className="h-10 w-10 rounded bg-gray-700 p-2 font-bold text-zinc-100"
+                    className="h-10 w-10 rounded bg-gray-900 p-2 font-bold text-zinc-100"
                     key={number}
                     onClick={() => handleCalculator(number)}
                   >
@@ -179,7 +179,7 @@ const Calculator = () => {
               // question -- should you use index?
               return (
                 <button
-                  className="h-10 w-10 rounded bg-gray-700 p-2 font-bold text-amber-600"
+                  className="h-10 w-10 rounded bg-gray-900 p-2 font-bold text-amber-600"
                   key={index}
                   onClick={() => {
                     handleCalculator(operator);

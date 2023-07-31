@@ -1,5 +1,8 @@
 Clear unused Storybook stories
 
-- navigation
-- add dark mode
-- routing
+- Absolute referencing (import statements)
+- Add dark mode
+- Routing
+  - Home Page
+  - Layout
+  - Error page (element)
