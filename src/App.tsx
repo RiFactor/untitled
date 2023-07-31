@@ -128,7 +128,7 @@ function App() {
               className={` overflow-hidden rounded-md border-2 border-gray-200 border-opacity-60 dark:border-gray-700`}
             >
               <div className="p-6">
-                <h2 className="mb-3 text-2xl font-bold leading-8 tracking-tight">
+                <h2 className="mb-3 rounded-md border p-3.5 text-right text-5xl font-bold leading-8 tracking-tight">
                   {
                     // calculatorState.lastUpdated === "clear"
                     //   ? 0
