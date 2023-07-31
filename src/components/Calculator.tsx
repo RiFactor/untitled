@@ -95,9 +95,9 @@ const Calculator = () => {
   return (
     <>
       {/* CALCULATOR */}
-      <div className="m-4 flex max-w-[250px] flex-col gap-2 rounded-md border bg-slate-800 p-4 dark:border-neutral-700">
+      <div className="m-4 flex max-w-[250px] flex-col gap-2 rounded border p-4 dark:border-neutral-700">
         {/* SCREEN */}
-        <h2 className="mb-3 rounded-md border p-3.5 text-right text-4xl font-bold leading-8 tracking-tight">
+        <h2 className="mb-3 rounded border p-3.5 text-right text-4xl font-bold leading-8 tracking-tight">
           {
             // calculatorState.lastUpdated === "clear"
             //   ? 0
@@ -118,7 +118,7 @@ const Calculator = () => {
             {/* pl-2 is a hack */}
             <div className="flex gap-4 pl-2">
               <button
-                className="h-10 w-10 rounded bg-gray-900 p-2 font-bold text-amber-600"
+                className="h-10 w-10 rounded-md bg-gray-900 p-2 font-bold text-amber-600 hover:opacity-70"
                 onClick={() => {
                   // ToDo refactor?
                   if (calculatorState.lastUpdated === "operator") {
@@ -136,7 +136,7 @@ const Calculator = () => {
                 C
               </button>
               <button
-                className="h-10 w-10 rounded bg-gray-900 p-2 font-bold text-amber-600"
+                className="h-10 w-10 rounded-md bg-gray-900 p-2 font-bold text-amber-600 hover:opacity-70"
                 onClick={() => {
                   setCalculatorState({} as ICalculator);
                   setError(false); // same here
@@ -145,7 +145,7 @@ const Calculator = () => {
                 AC
               </button>
               <button
-                className="h-10 w-10 rounded bg-gray-900 p-2 font-bold text-amber-600"
+                className="h-10 w-10 rounded-md bg-gray-900 p-2 font-bold text-amber-600 hover:opacity-70"
                 onClick={() => {
                   handleCalculator("+/-");
                   console.log(calculatorState.operator);
@@ -163,7 +163,7 @@ const Calculator = () => {
                   // do a for loop to find out if it needs to go on a new row
                   // for (i = 0; i < 12; i ++) {
                   <button
-                    className="h-10 w-10 rounded bg-gray-900 p-2 font-bold text-zinc-100"
+                    className="h-10 w-10 rounded-md bg-gray-900 p-2 font-bold text-zinc-100 hover:opacity-70"
                     key={number}
                     onClick={() => handleCalculator(number)}
                   >
@@ -179,7 +179,7 @@ const Calculator = () => {
               // question -- should you use index?
               return (
                 <button
-                  className="h-10 w-10 rounded bg-gray-900 p-2 font-bold text-amber-600"
+                  className="h-10 w-10 rounded-md bg-gray-900 p-2 font-bold text-amber-600 hover:opacity-70"
                   key={index}
                   onClick={() => {
                     handleCalculator(operator);
