@@ -121,13 +121,15 @@ function App() {
         </div>
         <ColorModeSwitch />
       </nav>
-      <div>
+      <div className="flex w-screen flex-col p-2">
         <div>
           <h1>Calculator</h1>
           <Card title="heading" description="text here" />
-          <button onClick={() => handleForLoop()}>Click Me</button>
+          <button className="rounded border border-neutral-50 p-2" onClick={() => handleForLoop()}>
+            Click Me
+          </button>
 
-          <div className="calculator md p-4 md:w-1/2" style={{ maxWidth: "320px" }}>
+          <div className="calculator md flex p-4 md:w-1/2" style={{ maxWidth: "320px" }}>
             <div
               className={` overflow-hidden rounded-md border-2 border-gray-200 border-opacity-60 dark:border-gray-700`}
             >
