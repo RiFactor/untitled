@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./App.css";
 import Card from "./components/Card";
+import ColorModeSwitch from "./components/ColorModeSwitch";
 
 // ToDo extract reusable functions
 // UI
@@ -110,25 +111,28 @@ function App() {
   };
 
   return (
-    <div>
-      <div>
-        <nav>
-          {/* links will be better */}
+    <div className="flex h-screen w-screen flex-col">
+      <nav className="flex justify-between gap-2 px-2">
+        {/* links will be better */}
+        <div className="flex gap-5">
           <a href="/">Home</a>
           <a href="/">About</a>
           <a href="/"> Contact Us</a>
-        </nav>
+        </div>
+        <ColorModeSwitch />
+      </nav>
+      <div>
         <div>
           <h1>Calculator</h1>
           <Card title="heading" description="text here" />
           <button onClick={() => handleForLoop()}>Click Me</button>
 
-          <div className="calculator md p-4 md:w-1/2" style={{ maxWidth: "720px" }}>
+          <div className="calculator md p-4 md:w-1/2" style={{ maxWidth: "320px" }}>
             <div
               className={` overflow-hidden rounded-md border-2 border-gray-200 border-opacity-60 dark:border-gray-700`}
             >
               <div className="p-6">
-                <h2 className="mb-3 rounded-md border p-3.5 text-right text-5xl font-bold leading-8 tracking-tight">
+                <h2 className="mb-3 rounded-md border p-3.5 text-right text-4xl font-bold leading-8 tracking-tight">
                   {
                     // calculatorState.lastUpdated === "clear"
                     //   ? 0
