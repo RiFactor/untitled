@@ -7,6 +7,10 @@ Clear unused Storybook stories
   - Layout
   - Error page (element)
 
+Styling:
+
+- make tailwind classes
+
 Calculator:
 Styling:
 
@@ -14,3 +18,6 @@ Styling:
   Features:
 - on hover & on click styling / animation
 - add bonus '.' button
+- C for operation: just don't bother: just replace or retain when clicked
+  Ri-factor:
+- button component

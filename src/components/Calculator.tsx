@@ -5,7 +5,6 @@ interface ICalculator {
   secondOperand: number;
   operator: string;
   lastUpdated: string;
-  // result: number;
 }
 // state to remember sequence of events and numbers
 const numericValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -16,6 +15,19 @@ const operators = ["/", "*", "-", "+", "="];
 const Calculator = () => {
   const [calculatorState, setCalculatorState] = useState<ICalculator>({} as ICalculator); // is this ok and better than setting default 0 / "" values
   const [error, setError] = useState(Boolean);
+
+  const handleClear = () => {
+    // ToDo refactor? switch-case or is there a way to dynamically pass the var to update
+    if (calculatorState.lastUpdated === "operator") {
+      setCalculatorState({ ...calculatorState, operator: "", lastUpdated: "clear" });
+    }
+    if (calculatorState.lastUpdated === "secondOperand") {
+      setCalculatorState({ ...calculatorState, secondOperand: 0, lastUpdated: "clear" });
+    }
+    if (calculatorState.lastUpdated === "firstOperandOrResult") {
+      setCalculatorState({ ...calculatorState, firstOperandOrResult: 0, lastUpdated: "clear" });
+    }
+  };
 
   const handleCalculator = (value: number | string) => {
     if (error) setError(false);
@@ -47,7 +59,6 @@ const Calculator = () => {
     }
 
     // if not passing a number but passing an operator, check to see if a calculation can be made between 2 numbers
-
     if (calculatorState.secondOperand) {
       const sum =
         // switch-case; if-else statements are better
@@ -58,7 +69,6 @@ const Calculator = () => {
           : calculatorState.operator === "*"
           ? calculatorState.firstOperandOrResult * calculatorState.secondOperand
           : calculatorState.firstOperandOrResult / calculatorState.secondOperand;
-      console.log("length of sum", sum.toString().length);
       if (sum.toString().length > 8) {
         setCalculatorState({} as ICalculator);
         setError(true);
@@ -67,15 +77,12 @@ const Calculator = () => {
 
       setCalculatorState({
         ...calculatorState,
-        // result: sum, // is this needed?
         firstOperandOrResult: sum,
         secondOperand: 0,
         // , // reset to enable furuther operations
         // operator: value === "=" ? "" : value
         operator: value
       });
-      console.log(calculatorState);
-
       return;
     }
 
@@ -94,14 +101,10 @@ const Calculator = () => {
 
   return (
     <>
-      {/* CALCULATOR */}
       <div className="m-4 flex max-w-[250px] flex-col gap-2 rounded border p-4 dark:border-neutral-700">
-        {/* SCREEN */}
         <h2 className="mb-3 rounded border p-3.5 text-right text-4xl font-bold leading-8 tracking-tight">
           {
-            // calculatorState.lastUpdated === "clear"
-            //   ? 0
-            //   :
+            // switch-case
             error
               ? "ERR"
               : calculatorState.secondOperand
@@ -112,26 +115,12 @@ const Calculator = () => {
           }
         </h2>
         <div className="flex flex-row gap-4">
-          {/* want flex flex-row-reverse? */}
-
           <div className="numbers-and-operators flex flex-col gap-4">
             {/* pl-2 is a hack */}
             <div className="flex gap-4 pl-2">
               <button
                 className="h-10 w-10 rounded-md bg-gray-900 p-2 font-bold text-amber-600 hover:opacity-70"
-                onClick={() => {
-                  // ToDo refactor?
-                  if (calculatorState.lastUpdated === "operator") {
-                    setCalculatorState({ ...calculatorState, operator: "", lastUpdated: "clear" });
-                  }
-                  if (calculatorState.lastUpdated === "secondOperand") {
-                    setCalculatorState({ ...calculatorState, secondOperand: 0, lastUpdated: "clear" });
-                  }
-                  if (calculatorState.lastUpdated === "firstOperandOrResult") {
-                    setCalculatorState({ ...calculatorState, firstOperandOrResult: 0, lastUpdated: "clear" });
-                  }
-                  console.log(calculatorState);
-                }}
+                onClick={() => handleClear()}
               >
                 C
               </button>
@@ -148,20 +137,15 @@ const Calculator = () => {
                 className="h-10 w-10 rounded-md bg-gray-900 p-2 font-bold text-amber-600 hover:opacity-70"
                 onClick={() => {
                   handleCalculator("+/-");
-                  console.log(calculatorState.operator);
                 }}
               >
                 +/-
               </button>
             </div>
 
-            {/* why isn't this style working */}
             <div className="flex flex-row-reverse flex-wrap gap-4 ">
-              {reverseNumericValues.reverse().map(number => {
+              {numericValues.map(number => {
                 return (
-                  // find a way to get it to display a max of 3 per row
-                  // do a for loop to find out if it needs to go on a new row
-                  // for (i = 0; i < 12; i ++) {
                   <button
                     className="h-10 w-10 rounded-md bg-gray-900 p-2 font-bold text-zinc-100 hover:opacity-70"
                     key={number}
@@ -176,7 +160,7 @@ const Calculator = () => {
           </div>
           <div className="flex flex-col gap-4 ">
             {operators.map((operator, index) => {
-              // question -- should you use index?
+              // Question -- should you use index?
               return (
                 <button
                   className="h-10 w-10 rounded-md bg-gray-900 p-2 font-bold text-amber-600 hover:opacity-70"
