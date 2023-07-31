@@ -111,7 +111,7 @@ function App() {
   };
 
   return (
-    <div className="flex h-screen w-screen flex-col">
+    <div className="flex h-screen w-screen flex-col gap-4 p-4">
       <nav className="flex justify-between gap-2 px-2">
         {/* links will be better */}
         <div className="flex gap-5">
@@ -129,103 +129,101 @@ function App() {
             Click Me
           </button>
 
-          <div className="calculator md flex p-4 md:w-1/2" style={{ maxWidth: "320px" }}>
-            <div
-              className={` overflow-hidden rounded-md border-2 border-gray-200 border-opacity-60 dark:border-gray-700`}
-            >
-              <div className="p-6">
-                <h2 className="mb-3 rounded-md border p-3.5 text-right text-4xl font-bold leading-8 tracking-tight">
-                  {
-                    // calculatorState.lastUpdated === "clear"
-                    //   ? 0
-                    //   :
-                    error
-                      ? "ERR"
-                      : calculatorState.secondOperand
-                      ? calculatorState.secondOperand
-                      : calculatorState.firstOperandOrResult
-                      ? calculatorState.firstOperandOrResult
-                      : 0
-                  }
-                </h2>
-                <div className="keypad text-white-700 flex flex-row font-bold">
-                  {/* want flex flex-row-reverse? */}
+          {/* CALCULATOR */}
+          <div className="flex max-w-[250px] flex-col gap-2 rounded-md border p-4 dark:border-neutral-700">
+            {/* SCREEN */}
+            <h2 className="mb-3 rounded-md border p-3.5 text-right text-4xl font-bold leading-8 tracking-tight">
+              {
+                // calculatorState.lastUpdated === "clear"
+                //   ? 0
+                //   :
+                error
+                  ? "ERR"
+                  : calculatorState.secondOperand
+                  ? calculatorState.secondOperand
+                  : calculatorState.firstOperandOrResult
+                  ? calculatorState.firstOperandOrResult
+                  : 0
+              }
+            </h2>
+            <div className="flex flex-row gap-4">
+              {/* want flex flex-row-reverse? */}
 
-                  <div className="numbers-and-operators flex flex-col gap-2">
-                    <div className="bonus-operators flex gap-2">
-                      <button
-                        className="keypad text-white-700 w-16 p-2 font-bold"
-                        onClick={() => {
-                          // ToDo refactor?
-                          if (calculatorState.lastUpdated === "operator") {
-                            setCalculatorState({ ...calculatorState, operator: "", lastUpdated: "clear" });
-                          }
-                          if (calculatorState.lastUpdated === "secondOperand") {
-                            setCalculatorState({ ...calculatorState, secondOperand: 0, lastUpdated: "clear" });
-                          }
-                          if (calculatorState.lastUpdated === "firstOperandOrResult") {
-                            setCalculatorState({ ...calculatorState, firstOperandOrResult: 0, lastUpdated: "clear" });
-                          }
-                          console.log(calculatorState);
-                        }}
-                      >
-                        C
-                      </button>
-                      <button
-                        className="keypad text-white-700 w-16 p-2 font-bold"
-                        onClick={() => {
-                          setCalculatorState({} as Calculator);
-                          setError(false); // same here
-                        }}
-                      >
-                        AC
-                      </button>
-                      <button
-                        className="keypad text-white-700 w-16 p-2 font-bold"
-                        onClick={() => {
-                          handleCalculator("+/-");
-                          console.log(calculatorState.operator);
-                        }}
-                      >
-                        +/-
-                      </button>
-                    </div>
-
-                    {/* why isn't this style working */}
-                    <div className="gap-2">
-                      {reverseNumericValues.reverse().map(number => {
-                        return (
-                          // find a way to get it to display a max of 3 per row
-                          // do a for loop to find out if it needs to go on a new row
-                          // for (i = 0; i < 12; i ++) {
-                          <button
-                            className="keypad text-white-700 w-16 gap-20 p-2 font-bold"
-                            key={number}
-                            onClick={() => handleCalculator(number)}
-                          >
-                            {number}
-                          </button>
-                          // }
-                        );
-                      })}
-                    </div>
-                  </div>
-                  <div className="keypad text-white-700 w-16 p-2 font-bold">
-                    {operators.map((operator, index) => {
-                      // question -- should you use index?
-                      return (
-                        <button
-                          key={index}
-                          onClick={() => {
-                            handleCalculator(operator);
-                          }}
-                        >
-                          {operator}
-                        </button>
-                      );
-                    })}
-                  </div>
+              <div className="numbers-and-operators flex flex-col gap-4">
+                {/* pl-2 is a hack */}
+                <div className="flex gap-4 pl-2">
+                  <button
+                    className="h-10 w-10 rounded bg-gray-700 p-2 font-bold text-amber-600"
+                    onClick={() => {
+                      // ToDo refactor?
+                      if (calculatorState.lastUpdated === "operator") {
+                        setCalculatorState({ ...calculatorState, operator: "", lastUpdated: "clear" });
+                      }
+                      if (calculatorState.lastUpdated === "secondOperand") {
+                        setCalculatorState({ ...calculatorState, secondOperand: 0, lastUpdated: "clear" });
+                      }
+                      if (calculatorState.lastUpdated === "firstOperandOrResult") {
+                        setCalculatorState({ ...calculatorState, firstOperandOrResult: 0, lastUpdated: "clear" });
+                      }
+                      console.log(calculatorState);
+                    }}
+                  >
+                    C
+                  </button>
+                  <button
+                    className="h-10 w-10 rounded bg-gray-700 p-2 font-bold text-amber-600"
+                    onClick={() => {
+                      setCalculatorState({} as Calculator);
+                      setError(false); // same here
+                    }}
+                  >
+                    AC
+                  </button>
+                  <button
+                    className="h-10 w-10 rounded bg-gray-700 p-2 font-bold text-amber-600"
+                    onClick={() => {
+                      handleCalculator("+/-");
+                      console.log(calculatorState.operator);
+                    }}
+                  >
+                    +/-
+                  </button>
                 </div>
+
+                {/* why isn't this style working */}
+                <div className="flex flex-row-reverse flex-wrap gap-4 ">
+                  {reverseNumericValues.reverse().map(number => {
+                    return (
+                      // find a way to get it to display a max of 3 per row
+                      // do a for loop to find out if it needs to go on a new row
+                      // for (i = 0; i < 12; i ++) {
+                      <button
+                        className="h-10 w-10 rounded bg-gray-700 p-2 font-bold text-zinc-100"
+                        key={number}
+                        onClick={() => handleCalculator(number)}
+                      >
+                        {number}
+                      </button>
+                      // }
+                    );
+                  })}
+                </div>
+              </div>
+              <div className="flex flex-col gap-4 ">
+                {operators.map((operator, index) => {
+                  // question -- should you use index?
+                  return (
+                    <button
+                      className="h-10 w-10 rounded bg-gray-700 p-2 font-bold text-amber-600"
+                      key={index}
+                      onClick={() => {
+                        handleCalculator(operator);
+                      }}
+                    >
+                      {operator}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>
