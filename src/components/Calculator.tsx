@@ -30,13 +30,10 @@ const Calculator = () => {
   };
 
   const tryRoundingDecimalPlaces = (sum: number) => {
-    console.log("here", Math.round(sum), Math.round(5));
     if (Math.round(sum) - sum === 0) {
-      console.log("whole number");
       return sum;
     } else {
       const newSum = Math.round(sum * 1000) / 1000;
-      console.log(newSum); // QUESTION -- why isn't this working --> b/c I need to update the state with this value!
       return newSum;
     }
   };
@@ -113,6 +110,7 @@ const Calculator = () => {
       setCalculatorState({ ...calculatorState, firstOperandOrResult: calculatorState.firstOperandOrResult * -1 });
       return;
     }
+
     setCalculatorState({ ...calculatorState, operator: value, lastUpdated: "operator" });
     return;
   };
