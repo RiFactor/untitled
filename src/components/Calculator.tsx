@@ -29,17 +29,31 @@ const Calculator = () => {
     }
   };
 
+  const tryRoundingDecimalPlaces = (sum: number) => {
+    console.log("here", Math.round(sum), Math.round(5));
+    if (Math.round(sum) - sum === 0) {
+      console.log("whole number");
+      return sum;
+    } else {
+      const newSum = Math.round(sum * 1000) / 1000;
+      console.log(newSum); // QUESTION -- why isn't this working --> b/c I need to update the state with this value!
+      return newSum;
+    }
+  };
+
   const handleCalculator = (value: number | string) => {
     if (error) setError(false);
+
     // if passing a number, update the operand
     if (typeof value === "number") {
       if (calculatorState.operator) {
         if (!calculatorState.secondOperand) {
           setCalculatorState({ ...calculatorState, secondOperand: value, lastUpdated: "secondOperand" });
-          return; // is there a better way to not write return constantly
+          return; // Question -- is there a better way to not write return constantly
         }
         // this can become a reusable function
         if (calculatorState.secondOperand.toString().length > 7) return;
+
         const singleValue = parseInt([calculatorState.secondOperand, value].join(""));
         setCalculatorState({ ...calculatorState, secondOperand: singleValue, lastUpdated: "secondOperand" });
         return;
@@ -60,7 +74,7 @@ const Calculator = () => {
 
     // if not passing a number but passing an operator, check to see if a calculation can be made between 2 numbers
     if (calculatorState.secondOperand) {
-      const sum =
+      let sum =
         // switch-case; if-else statements are better
         calculatorState.operator === "+"
           ? calculatorState.firstOperandOrResult + calculatorState.secondOperand
@@ -70,9 +84,13 @@ const Calculator = () => {
           ? calculatorState.firstOperandOrResult * calculatorState.secondOperand
           : calculatorState.firstOperandOrResult / calculatorState.secondOperand;
       if (sum.toString().length > 8) {
-        setCalculatorState({} as ICalculator);
-        setError(true);
-        return; // or should the state be wiped completely
+        // If a decimal, truncate
+        sum = tryRoundingDecimalPlaces(sum); // better as let?
+        if (sum.toString().length > 8) {
+          setCalculatorState({} as ICalculator);
+          setError(true);
+          return;
+        }
       }
 
       setCalculatorState({
