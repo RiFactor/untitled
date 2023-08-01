@@ -19,3 +19,24 @@ Bonus features
 
 - [] User can click a '+/-' button to change the sign of the number that is currently displayed.
 - [] User can see a decimal point ('.') button on the entry pad to that allows floating point numbers up to 3 places to be entered and operations to be carried out to the maximum number of decimal places entered for any one number.
+
+## Calculator:
+
+### Fix
+
+- []1960 / 3 => truncate decimal places to display within 8-digit limit
+
+## Styling:
+
+- [] add shadow on buttons
+  ## Extra Features:
+- [] on hover & on click styling / animation
+- [] C for operation: just don't bother: just replace or retain when clicked
+- [] accessibility - keyboard use
+  ## Ri-factor:
+- []button component
+- [] extract reusable functions
+
+// EdgeCase: enter number, then operator and clear operator w/o selecting a new operator: enter number should clear prev number
+// EdgeCase: above - iPhone will just remember the operator if a new one isn't provided
+// OR just overwrite operator, don't need clear function for it! :)
