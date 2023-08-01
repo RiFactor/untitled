@@ -40,3 +40,27 @@ Bonus features
 // EdgeCase: enter number, then operator and clear operator w/o selecting a new operator: enter number should clear prev number
 // EdgeCase: above - iPhone will just remember the operator if a new one isn't provided
 // OR just overwrite operator, don't need clear function for it! :)
+
+### Tips:
+
+Switch-case
+Always return default state, returning void will cause a crash so don’t do that
+Don’t add random elements to reducer e.g. dice or date object (bc random)
+Special characters can lead to errors, better to use words
+Can test reducer
+~ advanced: can break up reducers
+
+Specify types
+Make items optional
+
+Should separate render from state logic
+
+typeTAction adds pipe at the start for multiple Ors
+
+LHS of enum is used for calculations, RHS for display
+
+Should always have an initial state b/c If clearing instead of declaring {} in multiple places, reference multiple initial states
+
+Make numbers an enum?
+
+C / AC are being dispatched as separate actions
