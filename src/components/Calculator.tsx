@@ -1,7 +1,10 @@
 import { useState } from "react";
 
+// Question -- do I want to extract all calculations out of this component?
+// Question -- can I do some sort of method / function map of the keys rather than hard coding their functions?
+
 interface ICalculator {
-  firstOperandOrResult: number; // do I want this to be an array
+  firstOperandOrResult: number;
   secondOperand: number;
   operator: string;
   lastUpdated: string;
@@ -11,6 +14,8 @@ const numericValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 // const reverseNumericValues = numericValues.reverse(); // Question -- don't understand why this isn't changing the map order
 // const bonusOperators = ["C", "AC", "+/-"];
 const operators = ["/", "*", "-", "+", "="];
+
+// button.addEventListener("keydown"); // Question -- want to get key event listeners
 
 const Calculator = () => {
   const [calculatorState, setCalculatorState] = useState<ICalculator>({} as ICalculator); // is this ok and better than setting default 0 / "" values

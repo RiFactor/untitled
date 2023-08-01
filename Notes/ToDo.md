@@ -13,3 +13,7 @@ Clear unused Storybook stories
 
 - [] Tailwind classes
 - [] Components
+
+Other US:
+
+- [] menu modal, styled buttons & animate hamburger icon
