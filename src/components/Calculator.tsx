@@ -8,7 +8,7 @@ const reverseNumericValues = numericValues.reverse();
 
 enum EOperators {
   // code = display
-  "/" = "divide",
+  "/" = "divide", // good for aria labels but don't see how to access the words
   "*" = "multiply",
   "-" = "subtract",
   "+" = "add",
@@ -85,13 +85,13 @@ const reducer: Reducer<TState, TAction> = (state, action) => {
         // checking if first too jic some weird error occurs
         // nested switch-case or pass in payload here?
         let sum =
-          state.operator === "/"
+          state.operator === EOperators["/"]
             ? state.firstOperandOrResult / state.secondOperand
-            : state.operator === "*"
+            : state.operator === EOperators["*"]
             ? state.firstOperandOrResult * state.secondOperand
-            : state.operator === "-"
+            : state.operator === EOperators["-"]
             ? state.firstOperandOrResult - state.secondOperand
-            : state.operator === "+"
+            : state.operator === EOperators["+"]
             ? state.firstOperandOrResult + state.secondOperand
             : 0; // shouldn't get here
         // expect default to be sum?
@@ -168,6 +168,8 @@ const Calculator = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [error, setError] = useState(Boolean);
 
+  const arrayOfOperators = Object.keys(EOperators) as EOperators[];
+
   return (
     <>
       <div className="m-4 flex max-w-[250px] flex-col gap-2 rounded border p-4 dark:border-neutral-700">
@@ -229,7 +231,7 @@ const Calculator = () => {
             </div>
           </div>
           <div className="flex flex-col gap-4 ">
-            {Object.keys(EOperators).map(operator => {
+            {arrayOfOperators.map(operator => {
               return (
                 <button
                   className="h-10 w-10 rounded-md bg-gray-900 p-2 font-bold text-amber-600 hover:opacity-70"
