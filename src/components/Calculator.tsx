@@ -1,129 +1,172 @@
-import { useState } from "react";
+import { Reducer, useReducer, useState } from "react";
 
 // Answered -- do  extract calculations out of this component- separate display logic
 // Answered -- enums but hardcord C and AC and +/-
 
-interface ICalculator {
-  // should be optional
-  firstOperandOrResult?: number;
-  secondOperand?: number;
-  operator?: string;
-  lastUpdated?: string;
-}
-// state to remember sequence of events and numbers
 const numericValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; // leave these as they are, not enum
 const reverseNumericValues = numericValues.reverse();
-// const operators = [{name:"divide", symbol: "/"}, "*", "-", "+", "="]; // Do this but w/ an enum
-const operators = ["/", "*", "-", "+", "="];
+
+enum EOperators {
+  // code = display
+  "/" = "divide",
+  "*" = "multiply",
+  "-" = "subtract",
+  "+" = "add",
+  "=" = "result" // or equals?
+}
+
+type TState = {
+  // display: string; // optional?
+  firstOperandOrResult?: number;
+  secondOperand?: number;
+  operator?: EOperators;
+  lastUpdated?: "firstOperandOrResult" | "secondOperand" | "operator";
+};
+
+type TError = {
+  error?: boolean;
+};
+
+// {type: "display_number"; payload: number}
+// can i make the payload  type numeric values??
+type TAction =
+  | { type: "number"; payload: number }
+  | { type: "operator"; payload: EOperators }
+  | { type: "sign_inversion" }
+  | { type: "clear_last_value" }
+  | { type: "clear_all" }; // why snake_case
+
+const initialState: TState = {
+  // display: "" // do I need this
+};
+
+const errorState: TError = {
+  error: false
+};
+
+const tryRoundingDecimalPlaces = (sum: number) => {
+  if (Math.round(sum) - sum === 0) {
+    return sum;
+  } else {
+    const newSum = Math.round(sum * 1000) / 1000;
+    return newSum;
+  }
+};
+
+const reducer: Reducer<TState, TAction> = (state, action) => {
+  // reset error to false
+  switch (action.type) {
+    case "number":
+      // NOW  i need to map the numbers!
+      console.log(state, "number entered");
+      if (state.operator) {
+        // nested if statements ok?
+        if (!state.secondOperand) {
+          return { ...state, secondOperand: action.payload, lastUpdated: "secondOperand" };
+        } else if (state.secondOperand.toString().length < 8) {
+          // otherwise concatenate but cHECK THAT FEWER THAN 7 CHARACTERS
+          const singleValue = parseInt([state.secondOperand, action.payload].join(""));
+          return { ...state, secondOperand: singleValue, lastUpdated: "secondOperand" };
+        }
+        return { ...state }; // i think: needed b/c o/w it will try to update the firstOperand
+      }
+      if (!state.firstOperandOrResult) {
+        return { ...state, firstOperandOrResult: action.payload, lastUpdated: "firstOperandOrResult" };
+      } else if (state.firstOperandOrResult.toString().length < 8) {
+        const singleValue = parseInt([state.firstOperandOrResult, action.payload].join(""));
+        return { ...state, firstOperandOrResult: singleValue, lastUpdated: "firstOperandOrResult" };
+      }
+      return { ...state }; // default here?
+
+    case "operator":
+      console.log(state, "operator entered");
+      // see if calculation possible, o/w just store operator
+      if (state.operator && state.secondOperand && state.firstOperandOrResult) {
+        // checking if first too jic some weird error occurs
+        // nested switch-case or pass in payload here?
+        let sum =
+          state.operator === "/"
+            ? state.firstOperandOrResult / state.secondOperand
+            : state.operator === "*"
+            ? state.firstOperandOrResult * state.secondOperand
+            : state.operator === "-"
+            ? state.firstOperandOrResult - state.secondOperand
+            : state.operator === "+"
+            ? state.firstOperandOrResult + state.secondOperand
+            : 0; // shouldn't get here
+        // expect default to be sum?
+
+        if (sum.toString().length > 8) {
+          // better to use let sum or rename value?
+          sum = tryRoundingDecimalPlaces(sum);
+          if (sum.toString().length > 8) {
+            return initialState;
+            // if more than 8 digits and decimal, truncate o/w err
+            // display err?
+            // ********* ERROR STATE? stuck here
+          }
+        }
+        return { ...state, firstOperandOrResult: sum, secondOperand: undefined, operator: action.payload };
+      }
+      if (!state.firstOperandOrResult) {
+        return initialState; // don't just apply changes to second value if there isn't a first value
+      }
+      return { ...state, operator: action.payload, lastUpdated: "operator" }; // is last updated needed - yes b/c o/w will wipe out number!
+
+    case "sign_inversion":
+      console.log("+/-");
+      if (state.secondOperand) {
+        console.log(state);
+        return { ...state, secondOperand: state.secondOperand * -1 };
+      }
+      if (state.firstOperandOrResult) {
+        console.log(state);
+        return { ...state, firstOperandOrResult: state.firstOperandOrResult * -1 };
+      }
+      // if (value === "+/-") {
+      //   if (calculatorState.secondOperand) {
+      //     setCalculatorState({ ...calculatorState, secondOperand: calculatorState.secondOperand * -1 });
+      //     return;
+      //   }
+      //   if (calculatorState.firstOperandOrResult) {
+      //     setCalculatorState({ ...calculatorState, firstOperandOrResult: calculatorState?.firstOperandOrResult * -1 });
+      //     return;
+      //   }
+      //   return;
+      // }
+
+      return { ...state };
+
+    case "clear_last_value":
+      console.log(state, "clear last value");
+      if (state.lastUpdated === "firstOperandOrResult") {
+        return { ...state, firstOperandOrResult: undefined, lastUpdated: undefined };
+      } else if (state.lastUpdated === "secondOperand") {
+        return { ...state, secondOperand: undefined, lastUpdated: undefined };
+      } else if (state.lastUpdated === "operator") {
+        return { ...state, operator: undefined, lastUpdated: undefined };
+      }
+      return state;
+
+    case "clear_all":
+      console.log(state);
+      return initialState; // do I need to set the state as initial state?
+
+    default: // IF NUMBER BUT MORE THAN 7 CHARACTERS
+      console.log("how did you get here", state);
+      return state;
+  }
+};
+
+// ***
+// *** OLD CODE HERE ***
+// ***
 
 // window.addEventListener("keydown"); // Answered -- want to get key event listeners (using window b/c nt specific text field) // ensure event listener stops when on diff route useeffect w/ cleanup
 
 const Calculator = () => {
-  const [calculatorState, setCalculatorState] = useState<ICalculator>({}); // ToDo remove '{} as ICalculator' b/c overrides; Answered: {} better than setting default 0 / "" values
+  const [state, dispatch] = useReducer(reducer, initialState);
   const [error, setError] = useState(Boolean);
-
-  const handleClear = () => {
-    // ToDo switch-case
-    if (calculatorState.lastUpdated === "operator") {
-      setCalculatorState({ ...calculatorState, operator: "", lastUpdated: "clear" });
-    }
-    if (calculatorState.lastUpdated === "secondOperand") {
-      setCalculatorState({ ...calculatorState, secondOperand: 0, lastUpdated: "clear" });
-    }
-    if (calculatorState.lastUpdated === "firstOperandOrResult") {
-      setCalculatorState({ ...calculatorState, firstOperandOrResult: 0, lastUpdated: "clear" });
-    }
-  };
-
-  const tryRoundingDecimalPlaces = (sum: number) => {
-    if (Math.round(sum) - sum === 0) {
-      return sum;
-    } else {
-      const newSum = Math.round(sum * 1000) / 1000;
-      return newSum;
-    }
-  };
-
-  const handleCalculator = (value: number | string) => {
-    if (error) setError(false);
-
-    if (value === "+/-") {
-      if (calculatorState.secondOperand) {
-        setCalculatorState({ ...calculatorState, secondOperand: calculatorState.secondOperand * -1 });
-        return;
-      }
-      if (calculatorState.firstOperandOrResult) {
-        setCalculatorState({ ...calculatorState, firstOperandOrResult: calculatorState?.firstOperandOrResult * -1 });
-        return;
-      }
-      return;
-    }
-
-    // if passing a number, update the operand
-    if (typeof value === "number") {
-      if (calculatorState.operator) {
-        if (!calculatorState.secondOperand) {
-          setCalculatorState({ ...calculatorState, secondOperand: value, lastUpdated: "secondOperand" });
-          return; // Answered -- will use reducer
-        }
-        // this can become a reusable function
-        if (calculatorState.secondOperand.toString().length > 7) return;
-
-        const singleValue = parseInt([calculatorState.secondOperand, value].join(""));
-        setCalculatorState({ ...calculatorState, secondOperand: singleValue, lastUpdated: "secondOperand" });
-        return;
-      }
-      if (!calculatorState.firstOperandOrResult) {
-        setCalculatorState({ ...calculatorState, firstOperandOrResult: value, lastUpdated: "firstOperandOrResult" });
-        return;
-      }
-      if (calculatorState.firstOperandOrResult.toString().length > 7) return;
-      const singleValue = parseInt([calculatorState.firstOperandOrResult, value].join(""));
-      setCalculatorState({
-        ...calculatorState,
-        firstOperandOrResult: singleValue,
-        lastUpdated: "firstOperandOrResult"
-      });
-      return;
-    }
-
-    // if not passing a number but passing an operator, check to see if a calculation can be made between 2 numbers
-    if (calculatorState.secondOperand && calculatorState.firstOperandOrResult) {
-      // for some reason +/- an initial value, the secondoperand is 0 therefore thinks it has a value
-      let sum =
-        // ToDo: switch-case --> will use a reducer instead
-        calculatorState.operator === "+"
-          ? calculatorState.firstOperandOrResult + calculatorState.secondOperand
-          : calculatorState.operator === "-"
-          ? calculatorState.firstOperandOrResult - calculatorState.secondOperand
-          : calculatorState.operator === "*"
-          ? calculatorState.firstOperandOrResult * calculatorState.secondOperand
-          : calculatorState.firstOperandOrResult / calculatorState.secondOperand;
-      if (sum.toString().length > 8) {
-        // If a decimal, truncate
-        sum = tryRoundingDecimalPlaces(sum); // Question later: better as let?
-        if (sum.toString().length > 8) {
-          setCalculatorState({} as ICalculator);
-          setError(true);
-          return;
-        }
-      }
-
-      setCalculatorState({
-        ...calculatorState,
-        firstOperandOrResult: sum,
-        secondOperand: 0,
-        // Answered -- use undefined, then also make interface optional and fix errors
-        // , // reset to enable furuther operations
-        // operator: value === "=" ? "" : value
-        operator: value
-      });
-      return;
-    }
-
-    setCalculatorState({ ...calculatorState, operator: value, lastUpdated: "operator" });
-    return;
-  };
 
   return (
     <>
@@ -133,10 +176,10 @@ const Calculator = () => {
             // switch-case
             error
               ? "ERR"
-              : calculatorState.secondOperand
-              ? calculatorState.secondOperand
-              : calculatorState.firstOperandOrResult
-              ? calculatorState.firstOperandOrResult
+              : state.secondOperand
+              ? state.secondOperand
+              : state.firstOperandOrResult
+              ? state.firstOperandOrResult
               : 0
           }
         </h2>
@@ -146,14 +189,8 @@ const Calculator = () => {
             <div className="flex gap-4 pl-2">
               <button
                 className="h-10 w-10 rounded-md bg-gray-900 p-2 font-bold text-amber-600 hover:opacity-70"
-                onClick={() => handleClear()}
-              >
-                C
-              </button>
-              <button
-                className="h-10 w-10 rounded-md bg-gray-900 p-2 font-bold text-amber-600 hover:opacity-70"
                 onClick={() => {
-                  setCalculatorState({} as ICalculator);
+                  dispatch({ type: "clear_all" });
                   setError(false); // same here
                 }}
               >
@@ -161,8 +198,14 @@ const Calculator = () => {
               </button>
               <button
                 className="h-10 w-10 rounded-md bg-gray-900 p-2 font-bold text-amber-600 hover:opacity-70"
+                onClick={() => dispatch({ type: "clear_all" })}
+              >
+                C
+              </button>
+              <button
+                className="h-10 w-10 rounded-md bg-gray-900 p-2 font-bold text-amber-600 hover:opacity-70"
                 onClick={() => {
-                  handleCalculator("+/-");
+                  dispatch({ type: "sign_inversion" });
                 }}
               >
                 +/-
@@ -175,24 +218,25 @@ const Calculator = () => {
                   <button
                     className="h-10 w-10 rounded-md bg-gray-900 p-2 font-bold text-zinc-100 hover:opacity-70"
                     key={number}
-                    onClick={() => handleCalculator(number)}
+                    onClick={() => dispatch({ type: "number", payload: number })}
                   >
                     {number}
                   </button>
                   // }
                 );
               })}
+              <button onClick={() => dispatch({ type: "number", payload: 1 })}>Test 1</button>
             </div>
           </div>
           <div className="flex flex-col gap-4 ">
-            {operators.map(operator => {
-              // Answered -- never use index - there's a blog
+            {Object.keys(EOperators).map(operator => {
               return (
                 <button
                   className="h-10 w-10 rounded-md bg-gray-900 p-2 font-bold text-amber-600 hover:opacity-70"
                   key={operator}
                   onClick={() => {
-                    handleCalculator(operator);
+                    // Why TS error??
+                    dispatch({ type: "operator", payload: operator });
                   }}
                 >
                   {operator}
