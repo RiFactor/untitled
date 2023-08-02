@@ -4,7 +4,7 @@ import { useState } from "react";
 // Answered -- enums but hardcord C and AC and +/-
 
 interface ICalculator {
-  // should be optional
+  // should be optional?
   firstOperandOrResult?: number;
   secondOperand?: number;
   operator?: string;
