@@ -23,6 +23,7 @@ type TState = {
   secondOperand?: number;
   operator?: EOperators;
   lastUpdated?: "firstOperandOrResult" | "secondOperand" | "operator" | "sum";
+  error?: boolean;
 };
 
 type TError = {
@@ -62,6 +63,7 @@ const reducer: Reducer<TState, TAction> = (state, action) => {
       if (state.lastUpdated === "sum") {
         state = initialState;
       }
+      state.error = false;
       // NOW  i need to map the numbers!
       console.log(state, "number entered");
       if (state.operator) {
@@ -105,7 +107,8 @@ const reducer: Reducer<TState, TAction> = (state, action) => {
           // better to use let sum or rename value?
           sum = tryRoundingDecimalPlaces(sum);
           if (sum.toString().length > 8) {
-            return initialState;
+            state = initialState;
+            return { ...state, error: true };
             // if more than 8 digits and decimal, truncate o/w err
             // display err?
             // ********* ERROR STATE? stuck here
@@ -187,7 +190,7 @@ const Calculator = () => {
         <h2 className="mb-3 rounded border p-3.5 text-right text-4xl font-bold leading-8 tracking-tight">
           {
             // switch-case
-            error
+            state.error
               ? "ERR"
               : state.secondOperand
               ? state.secondOperand
