@@ -5,10 +5,10 @@ import { useState } from "react";
 
 interface ICalculator {
   // should be optional
-  firstOperandOrResult: number;
-  secondOperand: number;
-  operator: string;
-  lastUpdated: string;
+  firstOperandOrResult?: number;
+  secondOperand?: number;
+  operator?: string;
+  lastUpdated?: string;
 }
 // state to remember sequence of events and numbers
 const numericValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; // leave these as they are, not enum
@@ -19,7 +19,7 @@ const operators = ["/", "*", "-", "+", "="];
 // window.addEventListener("keydown"); // Answered -- want to get key event listeners (using window b/c nt specific text field) // ensure event listener stops when on diff route useeffect w/ cleanup
 
 const Calculator = () => {
-  const [calculatorState, setCalculatorState] = useState<ICalculator>({} as ICalculator); // ToDo remove as ICalculator b/c overrides; Answered: {} better than setting default 0 / "" values
+  const [calculatorState, setCalculatorState] = useState<ICalculator>({}); // ToDo remove '{} as ICalculator' b/c overrides; Answered: {} better than setting default 0 / "" values
   const [error, setError] = useState(Boolean);
 
   const handleClear = () => {
@@ -52,8 +52,10 @@ const Calculator = () => {
         setCalculatorState({ ...calculatorState, secondOperand: calculatorState.secondOperand * -1 });
         return;
       }
-      // oh dear
-      setCalculatorState({ ...calculatorState, firstOperandOrResult: calculatorState?.firstOperandOrResult * -1 });
+      if (calculatorState.firstOperandOrResult) {
+        setCalculatorState({ ...calculatorState, firstOperandOrResult: calculatorState?.firstOperandOrResult * -1 });
+        return;
+      }
       return;
     }
 
@@ -86,7 +88,7 @@ const Calculator = () => {
     }
 
     // if not passing a number but passing an operator, check to see if a calculation can be made between 2 numbers
-    if (calculatorState.secondOperand) {
+    if (calculatorState.secondOperand && calculatorState.firstOperandOrResult) {
       // for some reason +/- an initial value, the secondoperand is 0 therefore thinks it has a value
       let sum =
         // ToDo: switch-case --> will use a reducer instead
