@@ -1,16 +1,13 @@
 import { Reducer, useReducer, useState } from "react";
 
 // Answered -- do  extract calculations out of this component- separate display logic
-// Answered -- enums but hardcord C and AC and +/-
-
 // LOGIC to cover: essentially clear operations when typing new number when first result saved
 
 const numericValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; // leave these as they are, not enum
 const reverseNumericValues = numericValues.reverse();
 
 enum EOperators {
-  // code = display
-  "divide" = "/", // good for aria labels but don't see how to access the words
+  "divide" = "/", // good for aria labels
   "multiply" = "*",
   "subtract" = "-",
   "add" = "+",
@@ -23,11 +20,7 @@ type TState = {
   secondOperand?: number;
   operator?: EOperators;
   lastUpdated?: "firstOperandOrResult" | "secondOperand" | "operator" | "sum";
-  error?: boolean;
-};
-
-type TError = {
-  error?: boolean;
+  error?: boolean; // didn't know how to split this into separate state but works fine?
 };
 
 // {type: "display_number"; payload: number}
@@ -43,10 +36,6 @@ const initialState: TState = {
   // display: "" // do I need this
 };
 
-const errorState: TError = {
-  error: false
-};
-
 const tryRoundingDecimalPlaces = (sum: number) => {
   if (Math.round(sum) - sum === 0) {
     return sum;
@@ -57,21 +46,18 @@ const tryRoundingDecimalPlaces = (sum: number) => {
 };
 
 const reducer: Reducer<TState, TAction> = (state, action) => {
-  // reset error to false
   switch (action.type) {
     case "number":
       if (state.lastUpdated === "sum") {
         state = initialState;
       }
-      state.error = false;
-      // NOW  i need to map the numbers!
+      state.error = false; // after
       console.log(state, "number entered");
       if (state.operator) {
         // nested if statements ok?
         if (!state.secondOperand) {
           return { ...state, secondOperand: action.payload, lastUpdated: "secondOperand" };
         } else if (state.secondOperand.toString().length < 8) {
-          // otherwise concatenate but cHECK THAT FEWER THAN 7 CHARACTERS
           const singleValue = parseInt([state.secondOperand, action.payload].join(""));
           return { ...state, secondOperand: singleValue, lastUpdated: "secondOperand" };
         }
@@ -109,9 +95,6 @@ const reducer: Reducer<TState, TAction> = (state, action) => {
           if (sum.toString().length > 8) {
             state = initialState;
             return { ...state, error: true };
-            // if more than 8 digits and decimal, truncate o/w err
-            // display err?
-            // ********* ERROR STATE? stuck here
           }
         }
         return {
@@ -137,17 +120,6 @@ const reducer: Reducer<TState, TAction> = (state, action) => {
         console.log(state);
         return { ...state, firstOperandOrResult: state.firstOperandOrResult * -1 };
       }
-      // if (value === "+/-") {
-      //   if (calculatorState.secondOperand) {
-      //     setCalculatorState({ ...calculatorState, secondOperand: calculatorState.secondOperand * -1 });
-      //     return;
-      //   }
-      //   if (calculatorState.firstOperandOrResult) {
-      //     setCalculatorState({ ...calculatorState, firstOperandOrResult: calculatorState?.firstOperandOrResult * -1 });
-      //     return;
-      //   }
-      //   return;
-      // }
 
       return { ...state };
 
@@ -207,7 +179,6 @@ const Calculator = () => {
                 className="h-10 w-10 rounded-md bg-gray-900 p-2 font-bold text-amber-600 hover:opacity-70"
                 onClick={() => {
                   dispatch({ type: "clear_all" });
-                  setError(false); // same here
                 }}
               >
                 AC
@@ -250,7 +221,6 @@ const Calculator = () => {
                   className="h-10 w-10 rounded-md bg-gray-900 p-2 font-bold text-amber-600 hover:opacity-70"
                   key={operator}
                   onClick={() => {
-                    // Why TS error??
                     dispatch({ type: "operator", payload: operator });
                   }}
                 >
