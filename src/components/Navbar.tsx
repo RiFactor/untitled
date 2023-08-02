@@ -7,12 +7,14 @@ const Navbar = () => {
       <div className="flex gap-5">
         <NavLink
           to="/"
-          className={({ isActive }) => `nav-link font-bold w-18 ${isActive && "text-cyan-600 underline "} `}
+          className={({ isActive }) => `nav-link font-bold w-18 ${isActive && "dark:text-cyan-300 underline "} `}
         >
           Home
         </NavLink>
         <NavLink
-          className={({ isActive }) => `nav-link font-bold w-18 ${isActive && "text-cyan-600 font-bold underline"} `}
+          className={({ isActive }) =>
+            `nav-link font-bold w-18 ${isActive && "dark:text-cyan-300 font-bold underline"} `
+          }
           to="/calculator"
         >
           Calculator

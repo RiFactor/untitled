@@ -41,6 +41,11 @@ Bonus features
 // EdgeCase: above - iPhone will just remember the operator if a new one isn't provided
 // OR just overwrite operator, don't need clear function for it! :)
 
+### Accessiblity
+
+- [] colour contrast in dark + light mode
+- [] help w/ Chakra switch Chrome WAVE tool error
+
 ### Tips:
 
 Switch-case
