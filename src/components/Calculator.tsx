@@ -211,7 +211,7 @@ const Calculator = () => {
               </button>
               <button
                 className="h-10 w-10 rounded-md bg-gray-900 p-2 font-bold text-amber-600 hover:opacity-70"
-                onClick={() => dispatch({ type: "clear_all" })}
+                onClick={() => dispatch({ type: "clear_last_value" })}
               >
                 C
               </button>
