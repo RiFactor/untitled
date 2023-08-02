@@ -3,16 +3,18 @@ import { Reducer, useReducer, useState } from "react";
 // Answered -- do  extract calculations out of this component- separate display logic
 // Answered -- enums but hardcord C and AC and +/-
 
+// LOGIC to cover: essentially clear operations when typing new number when first result saved
+
 const numericValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; // leave these as they are, not enum
 const reverseNumericValues = numericValues.reverse();
 
 enum EOperators {
   // code = display
-  "/" = "divide", // good for aria labels but don't see how to access the words
-  "*" = "multiply",
-  "-" = "subtract",
-  "+" = "add",
-  "=" = "result" // or equals?
+  "divide" = "/", // good for aria labels but don't see how to access the words
+  "multiply" = "*",
+  "subtract" = "-",
+  "add" = "+",
+  "result" = "=" // or equals?
 }
 
 type TState = {
@@ -20,7 +22,7 @@ type TState = {
   firstOperandOrResult?: number;
   secondOperand?: number;
   operator?: EOperators;
-  lastUpdated?: "firstOperandOrResult" | "secondOperand" | "operator";
+  lastUpdated?: "firstOperandOrResult" | "secondOperand" | "operator" | "sum";
 };
 
 type TError = {
@@ -57,6 +59,9 @@ const reducer: Reducer<TState, TAction> = (state, action) => {
   // reset error to false
   switch (action.type) {
     case "number":
+      if (state.lastUpdated === "sum") {
+        state = initialState;
+      }
       // NOW  i need to map the numbers!
       console.log(state, "number entered");
       if (state.operator) {
@@ -85,13 +90,13 @@ const reducer: Reducer<TState, TAction> = (state, action) => {
         // checking if first too jic some weird error occurs
         // nested switch-case or pass in payload here?
         let sum =
-          state.operator === EOperators["/"]
+          state.operator === EOperators["divide"]
             ? state.firstOperandOrResult / state.secondOperand
-            : state.operator === EOperators["*"]
+            : state.operator === EOperators["multiply"]
             ? state.firstOperandOrResult * state.secondOperand
-            : state.operator === EOperators["-"]
+            : state.operator === EOperators["subtract"]
             ? state.firstOperandOrResult - state.secondOperand
-            : state.operator === EOperators["+"]
+            : state.operator === EOperators["add"]
             ? state.firstOperandOrResult + state.secondOperand
             : 0; // shouldn't get here
         // expect default to be sum?
@@ -106,7 +111,13 @@ const reducer: Reducer<TState, TAction> = (state, action) => {
             // ********* ERROR STATE? stuck here
           }
         }
-        return { ...state, firstOperandOrResult: sum, secondOperand: undefined, operator: action.payload };
+        return {
+          ...state,
+          firstOperandOrResult: sum,
+          secondOperand: undefined,
+          operator: action.payload,
+          lastUpdated: "sum"
+        };
       }
       if (!state.firstOperandOrResult) {
         return initialState; // don't just apply changes to second value if there isn't a first value
@@ -227,7 +238,6 @@ const Calculator = () => {
                   // }
                 );
               })}
-              <button onClick={() => dispatch({ type: "number", payload: 1 })}>Test 1</button>
             </div>
           </div>
           <div className="flex flex-col gap-4 ">
