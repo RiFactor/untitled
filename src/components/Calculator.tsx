@@ -168,7 +168,7 @@ const Calculator = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [error, setError] = useState(Boolean);
 
-  const arrayOfOperators = Object.keys(EOperators) as EOperators[];
+  // const arrayOfOperators = Object.keys(EOperators) as EOperators[]; // alternate TS solution
 
   return (
     <>
@@ -231,7 +231,7 @@ const Calculator = () => {
             </div>
           </div>
           <div className="flex flex-col gap-4 ">
-            {arrayOfOperators.map(operator => {
+            {Object.values(EOperators).map((operator: EOperators) => {
               return (
                 <button
                   className="h-10 w-10 rounded-md bg-gray-900 p-2 font-bold text-amber-600 hover:opacity-70"
