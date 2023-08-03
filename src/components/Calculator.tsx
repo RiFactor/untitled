@@ -87,7 +87,7 @@ const Calculator = () => {
 
   return (
     <main className="gap-4">
-      <h1 className="">Calculator</h1>
+      <h1 className="pl-4">Calculator</h1>
       <div className="m-4 flex max-w-[16.25rem] flex-col gap-2 rounded border-2 p-4 dark:border-neutral-400">
         <h2 className="mb-3 rounded border-2 border-neutral-400 p-3.5 text-right text-4xl font-bold leading-8 tracking-tight">
           {display()}
