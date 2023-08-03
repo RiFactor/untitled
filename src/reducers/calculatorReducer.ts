@@ -43,6 +43,7 @@ const calculatorReducer: Reducer<TState, TAction> = (state, action) => {
   switch (action.type) {
     case "number":
       if (state.lastUpdated === "sum") {
+        // enable user to start new arithmetic operation, same behaviour as computer / phone
         state = initialState;
       }
       state.error = false; // after
@@ -86,25 +87,29 @@ const calculatorReducer: Reducer<TState, TAction> = (state, action) => {
 
         if (sum.toString().length > 8) {
           // better to use 'let' sum or rename value?
+          console.log(sum, "is it long");
           sum = tryRoundingDecimalPlaces(sum);
-          if (sum.toString().length > 8) {
-            state = initialState;
-            console.log("logged error state");
-            return { ...state, error: true };
-          }
         }
-        return {
-          ...state,
-          firstOperandOrResult: sum,
-          secondOperand: undefined,
-          operator: action.payload,
-          lastUpdated: "sum"
-        };
-      }
-      if (!state.firstOperandOrResult) {
+
+        console.log(sum, "is it long now?");
+        if (sum.toString().length > 8) {
+          state = initialState;
+          console.log("logged error state");
+          return { ...state, error: true };
+        } else {
+          console.log("shouldn't be hre rn"); // BECAUSE OF DOUBLE LOAD ! for some reason enter key has diff behaviour and end up here when should just display ERR and not be here
+          return {
+            ...state,
+            firstOperandOrResult: sum,
+            secondOperand: undefined,
+            operator: action.payload,
+            lastUpdated: "sum"
+          };
+        }
+      } else if (!state.firstOperandOrResult && state.firstOperandOrResult !== 0) {
+        console.log("shouldn't be hre rn2 ");
         return initialState; // don't just apply changes to second value if there isn't a first value
-      }
-      return { ...state, operator: action.payload, lastUpdated: "operator" }; // is last updated needed - yes b/c o/w will wipe out number!
+      } else return { ...state, operator: action.payload, lastUpdated: "operator" }; // is last updated needed - yes b/c o/w will wipe out number!
 
     case "sign_inversion":
       if (state.secondOperand) {
@@ -113,7 +118,6 @@ const calculatorReducer: Reducer<TState, TAction> = (state, action) => {
       if (state.firstOperandOrResult) {
         return { ...state, firstOperandOrResult: state.firstOperandOrResult * -1 };
       }
-
       return { ...state };
 
     case "clear_last_value":

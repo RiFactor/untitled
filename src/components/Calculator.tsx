@@ -1,10 +1,10 @@
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useRef } from "react";
 import calculatorReducer, { EOperators } from "reducers/calculatorReducer";
 // LOGIC to cover: essentially clear operations when typing new number when first result saved
 
 // window.addEventListener("keydown"); // Answered -- want to get key event listeners (using window b/c nt specific text field) // ensure event listener stops when on diff route useeffect w/ cleanup
 // TODO stop listening to keyboard when navigation away -> clean up
-// TODO only read values once
+// TODO only read values once; THIS WILL resolve the ERR not displaying when using keyboard
 
 // window.addEventListener;("keypress", )
 
@@ -12,8 +12,15 @@ const Calculator = () => {
   const [state, dispatch] = useReducer(calculatorReducer, {});
   const numericValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; // leave these as they are, not enum
   const reverseNumericValues = numericValues.reverse();
+
   useEffect(() => {
-    window.addEventListener("keydown", event => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // {
+      //   controller.signal;
+      // }
       // switch (event.key) {
       //   case event.key:
       //     dispatch({ type: "number", payload: parseInt(event.key) }); // want it to happen once
@@ -31,6 +38,7 @@ const Calculator = () => {
         dispatch({ type: "operator", payload: event.key as EOperators }); // want it to happen once
       } else if (event.key === "Enter") {
         dispatch({ type: "operator", payload: "=" as EOperators });
+        console.log(state, "enter pressed");
       }
       // add signal to abort (cleanup when leaving page)
       else if (event.key === "c" || event.key === "C") {
@@ -44,8 +52,17 @@ const Calculator = () => {
       } else {
         return; // do nothing, not clear!! --> is it b/c page is being reloaded?
       }
-    });
-  }, []);
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    console.log("useeffect always here?");
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      controller.abort();
+      console.log("aborted");
+    };
+  }, [state]);
 
   const display = () => {
     console.log(state.error); // something is resetting it to true prematurely
