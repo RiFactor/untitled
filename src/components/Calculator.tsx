@@ -138,7 +138,7 @@ const reducer: Reducer<TState, TAction> = (state, action) => {
       console.log(state);
       return initialState; // do I need to set the state as initial state?
 
-    default: // IF NUMBER BUT MORE THAN 7 CHARACTERS
+    default: // IF NUMBER BUT MORE THAN 7 CHARACTERS, should be covered above
       console.log("how did you get here", state);
       return state;
   }
@@ -151,13 +151,24 @@ const Calculator = () => {
 
   const display = () => {
     return state.error
-      ? // switch-case
-        "ERR"
+      ? "ERR"
       : state.secondOperand
       ? state.secondOperand
       : state.firstOperandOrResult
       ? state.firstOperandOrResult
       : 0;
+
+    // how do I make this a switch-case
+    // switch (state) {
+    //   case state.error:
+    //     return "ERR";
+    //   case state.secondOperand:
+    //     return state.secondOperand;
+    //   case state.firstOperandOrResult:
+    //     return state.firstOperandOrResult
+    //   default
+    //     return 0;
+    //   }
   };
 
   // const arrayOfOperators = Object.keys(EOperators) as EOperators[]; // alternate TS solution
