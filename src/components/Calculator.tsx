@@ -13,7 +13,13 @@ const Calculator = () => {
   useEffect(() => {
     window.addEventListener("keypress", event => {
       console.log(event.key, "pressed");
+      if (parseInt(event.key)) {
+        dispatch({ type: "number", payload: parseInt(event.key) }); // want it to happen once
+      }
       // add signal to abort (cleanup when leaving page)
+      if (event.key === "c" || "C") {
+        dispatch({ type: "clear_last_value" });
+      }
     });
   }, []);
 

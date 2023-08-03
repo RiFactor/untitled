@@ -46,7 +46,7 @@ const calculatorReducer: Reducer<TState, TAction> = (state, action) => {
         state = initialState;
       }
       state.error = false; // after
-      console.log(state, "number entered");
+      // console.log(state, "number entered");
       if (state.operator) {
         // nested if statements ok?
         if (!state.secondOperand) {
@@ -66,7 +66,7 @@ const calculatorReducer: Reducer<TState, TAction> = (state, action) => {
       return { ...state }; // default here?
 
     case "operator":
-      console.log(state, "operator entered");
+      // console.log(state, "operator entered");
       // see if calculation possible, o/w just store operator
       if (state.operator && state.secondOperand && state.firstOperandOrResult) {
         // checking if first too jic some weird error occurs
@@ -105,20 +105,20 @@ const calculatorReducer: Reducer<TState, TAction> = (state, action) => {
       return { ...state, operator: action.payload, lastUpdated: "operator" }; // is last updated needed - yes b/c o/w will wipe out number!
 
     case "sign_inversion":
-      console.log("+/-");
+      // console.log("+/-");
       if (state.secondOperand) {
-        console.log(state);
+        // console.log(state);
         return { ...state, secondOperand: state.secondOperand * -1 };
       }
       if (state.firstOperandOrResult) {
-        console.log(state);
+        // console.log(state);
         return { ...state, firstOperandOrResult: state.firstOperandOrResult * -1 };
       }
 
       return { ...state };
 
     case "clear_last_value":
-      console.log(state, "clear last value");
+      // console.log(state, "clear last value");
       if (state.lastUpdated === "firstOperandOrResult") {
         return { ...state, firstOperandOrResult: undefined, lastUpdated: undefined };
       } else if (state.lastUpdated === "secondOperand") {
@@ -129,7 +129,7 @@ const calculatorReducer: Reducer<TState, TAction> = (state, action) => {
       return state;
 
     case "clear_all":
-      console.log(state);
+      // console.log(state);
       return initialState; // do I need to set the state as initial state?
 
     default: // IF NUMBER BUT MORE THAN 7 CHARACTERS, should be covered above
