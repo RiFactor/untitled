@@ -3,6 +3,8 @@ import calculatorReducer, { EOperators } from "reducers/calculatorReducer";
 // LOGIC to cover: essentially clear operations when typing new number when first result saved
 
 // window.addEventListener("keydown"); // Answered -- want to get key event listeners (using window b/c nt specific text field) // ensure event listener stops when on diff route useeffect w/ cleanup
+// TODO stop listening to keyboard when navigation away -> clean up
+// TODO only read values once
 
 // window.addEventListener;("keypress", )
 
@@ -21,8 +23,6 @@ const Calculator = () => {
       // switch case here how??
       console.log(parseInt(event.key));
       if (parseInt(event.key) || event.key === "0") {
-        // this isn't working
-        console.log("number");
         dispatch({ type: "number", payload: parseInt(event.key) });
       } else if (
         (event.shiftKey && event.key === "*") ||
@@ -31,12 +31,9 @@ const Calculator = () => {
         event.key === "=" ||
         event.key === "-"
       ) {
-        // this isn't working
         console.log(event.key, "test operator");
         dispatch({ type: "operator", payload: event.key as EOperators }); // want it to happen once
-        // make enter key "="
       } else if (event.key === "Enter") {
-        console.log("entere heEre?");
         dispatch({ type: "operator", payload: "=" as EOperators });
       }
       // add signal to abort (cleanup when leaving page)
@@ -50,8 +47,6 @@ const Calculator = () => {
         console.log(event.key, "sign inversion");
         dispatch({ type: "sign_inversion" });
       } else if (parseInt(event.key) || event.key === "0") {
-        // this isn't working
-        console.log("number");
         dispatch({ type: "number", payload: parseInt(event.key) }); // want it to happen once
       } else {
         console.log(event.key, "else");
