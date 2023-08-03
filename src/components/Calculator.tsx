@@ -1,4 +1,4 @@
-import { Reducer, useReducer, useState } from "react";
+import { Reducer, useReducer } from "react";
 
 // Answered -- do  extract calculations out of this component- separate display logic
 // LOGIC to cover: essentially clear operations when typing new number when first result saved
@@ -144,15 +144,21 @@ const reducer: Reducer<TState, TAction> = (state, action) => {
   }
 };
 
-// ***
-// *** OLD CODE HERE ***
-// ***
-
 // window.addEventListener("keydown"); // Answered -- want to get key event listeners (using window b/c nt specific text field) // ensure event listener stops when on diff route useeffect w/ cleanup
 
 const Calculator = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [error, setError] = useState(Boolean);
+
+  const display = () => {
+    return state.error
+      ? // switch-case
+        "ERR"
+      : state.secondOperand
+      ? state.secondOperand
+      : state.firstOperandOrResult
+      ? state.firstOperandOrResult
+      : 0;
+  };
 
   // const arrayOfOperators = Object.keys(EOperators) as EOperators[]; // alternate TS solution
 
@@ -161,16 +167,7 @@ const Calculator = () => {
       <h1>Calculator</h1>
       <div className="m-4 flex max-w-[250px] flex-col gap-2 rounded border-2 p-4 dark:border-neutral-400">
         <h2 className="mb-3 rounded border-2 border-neutral-400 p-3.5 text-right text-4xl font-bold leading-8 tracking-tight">
-          {
-            // switch-case
-            state.error
-              ? "ERR"
-              : state.secondOperand
-              ? state.secondOperand
-              : state.firstOperandOrResult
-              ? state.firstOperandOrResult
-              : 0
-          }
+          {display()}
         </h2>
         <div className="flex flex-row gap-4">
           <div className="numbers-and-operators flex flex-col gap-4">
@@ -210,7 +207,6 @@ const Calculator = () => {
                   >
                     {number}
                   </button>
-                  // }
                 );
               })}
             </div>
