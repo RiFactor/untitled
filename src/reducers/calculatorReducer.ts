@@ -87,17 +87,13 @@ const calculatorReducer: Reducer<TState, TAction> = (state, action) => {
 
         if (sum.toString().length > 8) {
           // better to use 'let' sum or rename value?
-          console.log(sum, "is it long");
           sum = tryRoundingDecimalPlaces(sum);
         }
 
-        console.log(sum, "is it long now?");
         if (sum.toString().length > 8) {
           state = initialState;
-          console.log("logged error state");
           return { ...state, error: true };
         } else {
-          console.log("shouldn't be hre rn"); // BECAUSE OF DOUBLE LOAD ! for some reason enter key has diff behaviour and end up here when should just display ERR and not be here
           return {
             ...state,
             firstOperandOrResult: sum,
@@ -107,7 +103,6 @@ const calculatorReducer: Reducer<TState, TAction> = (state, action) => {
           };
         }
       } else if (!state.firstOperandOrResult && state.firstOperandOrResult !== 0) {
-        console.log("shouldn't be hre rn2 ");
         return initialState; // don't just apply changes to second value if there isn't a first value
       } else return { ...state, operator: action.payload, lastUpdated: "operator" }; // is last updated needed - yes b/c o/w will wipe out number!
 

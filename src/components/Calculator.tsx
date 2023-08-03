@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useRef } from "react";
+import { useEffect, useReducer } from "react";
 import calculatorReducer, { EOperators } from "reducers/calculatorReducer";
 // LOGIC to cover: essentially clear operations when typing new number when first result saved
 
@@ -15,7 +15,7 @@ const Calculator = () => {
 
   useEffect(() => {
     const controller = new AbortController();
-    const signal = controller.signal;
+    // const signal = controller.signal;
 
     const handleKeyDown = (event: KeyboardEvent) => {
       // {
@@ -38,7 +38,6 @@ const Calculator = () => {
         dispatch({ type: "operator", payload: event.key as EOperators }); // want it to happen once
       } else if (event.key === "Enter") {
         dispatch({ type: "operator", payload: "=" as EOperators });
-        console.log(state, "enter pressed");
       }
       // add signal to abort (cleanup when leaving page)
       else if (event.key === "c" || event.key === "C") {
@@ -56,16 +55,13 @@ const Calculator = () => {
 
     window.addEventListener("keydown", handleKeyDown);
 
-    console.log("useeffect always here?");
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
       controller.abort();
-      console.log("aborted");
     };
   }, [state]);
 
   const display = () => {
-    console.log(state.error); // something is resetting it to true prematurely
     return state.error
       ? "ERR"
       : state.secondOperand || state.secondOperand === 0
