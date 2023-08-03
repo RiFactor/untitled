@@ -49,7 +49,7 @@ const calculatorReducer: Reducer<TState, TAction> = (state, action) => {
       // console.log(state, "number entered");
       if (state.operator) {
         // nested if statements ok?
-        if (!state.secondOperand) {
+        if (!state.secondOperand && state.secondOperand !== 0) {
           return { ...state, secondOperand: action.payload, lastUpdated: "secondOperand" };
         } else if (state.secondOperand.toString().length < 8) {
           const singleValue = parseInt([state.secondOperand, action.payload].join(""));
@@ -57,7 +57,7 @@ const calculatorReducer: Reducer<TState, TAction> = (state, action) => {
         }
         return { ...state }; // i think: needed b/c o/w it will try to update the firstOperand
       }
-      if (!state.firstOperandOrResult) {
+      if (!state.firstOperandOrResult && state.firstOperandOrResult !== 0) {
         return { ...state, firstOperandOrResult: action.payload, lastUpdated: "firstOperandOrResult" };
       } else if (state.firstOperandOrResult.toString().length < 8) {
         const singleValue = parseInt([state.firstOperandOrResult, action.payload].join(""));
@@ -68,7 +68,11 @@ const calculatorReducer: Reducer<TState, TAction> = (state, action) => {
     case "operator":
       // console.log(state, "operator entered");
       // see if calculation possible, o/w just store operator
-      if (state.operator && state.secondOperand && state.firstOperandOrResult) {
+      if (
+        state.operator &&
+        (state.secondOperand || state.secondOperand === 0) &&
+        (state.firstOperandOrResult || state.firstOperandOrResult === 0)
+      ) {
         // checking if first too jic some weird error occurs
         // nested switch-case or pass in payload here?
         let sum =

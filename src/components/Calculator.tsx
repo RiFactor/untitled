@@ -63,9 +63,9 @@ const Calculator = () => {
   const display = () => {
     return state.error
       ? "ERR"
-      : state.secondOperand
+      : state.secondOperand || state.secondOperand === 0
       ? state.secondOperand
-      : state.firstOperandOrResult
+      : state.firstOperandOrResult || state.firstOperandOrResult === 0
       ? state.firstOperandOrResult
       : 0;
 
