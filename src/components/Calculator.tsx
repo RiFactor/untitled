@@ -13,15 +13,12 @@ const Calculator = () => {
   const numericValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; // leave these as they are, not enum
   const reverseNumericValues = numericValues.reverse();
   useEffect(() => {
-    console.log("load");
     window.addEventListener("keydown", event => {
-      console.log(event.key);
       // switch (event.key) {
       //   case event.key:
       //     dispatch({ type: "number", payload: parseInt(event.key) }); // want it to happen once
       // }
       // switch case here how??
-      console.log(parseInt(event.key));
       if (parseInt(event.key) || event.key === "0") {
         dispatch({ type: "number", payload: parseInt(event.key) });
       } else if (
@@ -31,31 +28,27 @@ const Calculator = () => {
         event.key === "=" ||
         event.key === "-"
       ) {
-        console.log(event.key, "test operator");
         dispatch({ type: "operator", payload: event.key as EOperators }); // want it to happen once
       } else if (event.key === "Enter") {
         dispatch({ type: "operator", payload: "=" as EOperators });
       }
       // add signal to abort (cleanup when leaving page)
       else if (event.key === "c" || event.key === "C") {
-        console.log(event.key, "clear last value");
         dispatch({ type: "clear_last_value" });
       } else if (event.key === "a" || event.key === "A") {
-        console.log(event.key, "clear all");
         dispatch({ type: "clear_all" });
       } else if (event.key === "`") {
-        console.log(event.key, "sign inversion");
         dispatch({ type: "sign_inversion" });
       } else if (parseInt(event.key) || event.key === "0") {
         dispatch({ type: "number", payload: parseInt(event.key) }); // want it to happen once
       } else {
-        console.log(event.key, "else");
         return; // do nothing, not clear!! --> is it b/c page is being reloaded?
       }
     });
   }, []);
 
   const display = () => {
+    console.log(state.error); // something is resetting it to true prematurely
     return state.error
       ? "ERR"
       : state.secondOperand || state.secondOperand === 0
@@ -82,14 +75,14 @@ const Calculator = () => {
   return (
     <main className="gap-4">
       <h1 className="">Calculator</h1>
-      <div className="m-4 flex max-w-[260px] flex-col gap-2 rounded border-2 p-4 dark:border-neutral-400">
+      <div className="m-4 flex max-w-[16.25rem] flex-col gap-2 rounded border-2 p-4 dark:border-neutral-400">
         <h2 className="mb-3 rounded border-2 border-neutral-400 p-3.5 text-right text-4xl font-bold leading-8 tracking-tight">
           {display()}
         </h2>
         <div className="flex flex-row gap-4">
-          <div className="numbers-and-operators flex flex-col gap-4">
-            {/* pl-2 is a hack */}
-            <div className="flex gap-4 pl-2">
+          {/* how do i make the spacing here consistent, tried grow */}
+          <div className=" flex flex-col gap-4">
+            <div className="flex justify-between">
               <button
                 className="h-10 w-10 rounded-md bg-gray-900 p-2 font-bold text-amber-600 hover:opacity-70"
                 onClick={() => {
@@ -114,7 +107,7 @@ const Calculator = () => {
               </button>
             </div>
 
-            <div className="flex flex-row-reverse flex-wrap gap-4 ">
+            <div className="flex flex-row-reverse flex-wrap justify-between gap-4 ">
               {reverseNumericValues.map(number => {
                 return (
                   <button
