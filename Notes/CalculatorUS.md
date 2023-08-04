@@ -22,6 +22,11 @@ Bonus features
 
 ## Calculator:
 
+### Notes
+
+use window listener b/c not a specific input field
+clean up listener in use effect
+
 ### Fix
 
 - []1960 / 3 => truncate decimal places to display within 8-digit limit
