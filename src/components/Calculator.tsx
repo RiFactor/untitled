@@ -1,10 +1,10 @@
 import { useEffect, useReducer } from "react";
 import calculatorReducer, { EOperators } from "reducers/calculatorReducer";
-// LOGIC to cover: essentially clear operations when typing new number when first result saved
+// LOGIC to cover: essentially clear operations when typing new number when first result saved [done?]
 
 // window.addEventListener("keydown"); // Answered -- want to get key event listeners (using window b/c nt specific text field) // ensure event listener stops when on diff route useeffect w/ cleanup
-// TODO stop listening to keyboard when navigation away -> clean up
-// TODO only read values once; THIS WILL resolve the ERR not displaying when using keyboard
+// DONE stop listening to keyboard when navigation away -> clean up
+// DONE only read values once; THIS WILL resolve the ERR not displaying when using keyboard
 
 // window.addEventListener;("keypress", )
 
@@ -14,54 +14,60 @@ const Calculator = () => {
   const reverseNumericValues = numericValues.reverse();
 
   useEffect(() => {
-    const controller = new AbortController();
-    // const signal = controller.signal;
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      // {
-      //   controller.signal;
-      // }
-      // switch (event.key) {
-      //   case event.key:
-      //     dispatch({ type: "number", payload: parseInt(event.key) }); // want it to happen once
-      // }
-      // switch case here how??
-      if (parseInt(event.key) || event.key === "0") {
-        dispatch({ type: "number", payload: parseInt(event.key) });
-      } else if (
-        (event.shiftKey && event.key === "*") ||
-        (event.shiftKey && event.key === "+") ||
-        event.key === "/" ||
-        event.key === "=" ||
-        event.key === "-"
-      ) {
-        dispatch({ type: "operator", payload: event.key as EOperators }); // want it to happen once
-      } else if (event.key === "Enter") {
-        dispatch({ type: "operator", payload: "=" as EOperators });
-      }
-      // add signal to abort (cleanup when leaving page)
-      else if (event.key === "c" || event.key === "C") {
-        dispatch({ type: "clear_last_value" });
-      } else if (event.key === "a" || event.key === "A") {
-        dispatch({ type: "clear_all" });
-      } else if (event.key === "`") {
-        dispatch({ type: "sign_inversion" });
-      } else if (parseInt(event.key) || event.key === "0") {
-        dispatch({ type: "number", payload: parseInt(event.key) }); // want it to happen once
-      } else {
-        return; // do nothing, not clear!! --> is it b/c page is being reloaded?
+    const handleKeyUp = (event: KeyboardEvent) => {
+      switch (event.key) {
+        case "0":
+        case "1":
+        case "2":
+        case "3":
+        case "4":
+        case "5":
+        case "6":
+        case "7":
+        case "8":
+        case "9":
+          dispatch({ type: "number", payload: parseInt(event.key) });
+          return;
+        case "=":
+        case "/":
+        case "-": // ToDo logic to save second operand and chain consecutive operations e.g. 5+4 = 20 -> = 24 = 28 etcs
+        case event.shiftKey && "*":
+        case event.shiftKey && "+":
+          // Question how do I handle shift key and *
+          dispatch({ type: "operator", payload: event.key as EOperators });
+          return;
+        case event.shiftKey && "_": // allow user to minus using shift key
+          dispatch({ type: "operator", payload: "-" as EOperators });
+          return;
+        case "Enter":
+          dispatch({ type: "operator", payload: "=" as EOperators });
+          return;
+        case "c":
+        case "C":
+        case "Delete": // Question -- help // ToDo add complex logic to remove last item of operand
+          dispatch({ type: "clear_last_value" });
+          return;
+        case "a":
+        case "A":
+          dispatch({ type: "clear_all" });
+          return;
+        case "`": // or alternate agreed key
+          dispatch({ type: "sign_inversion" });
+          return;
+        default:
+          break; // Question -- do I want this to be return?
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
 
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      controller.abort();
+      window.removeEventListener("keyup", handleKeyUp);
     };
   }, [state]);
 
   const display = () => {
+    //TODO if-else
     return state.error
       ? "ERR"
       : state.secondOperand || state.secondOperand === 0
@@ -70,17 +76,7 @@ const Calculator = () => {
       ? state.firstOperandOrResult
       : 0;
 
-    // how do I make this a switch-case
-    // switch (state) {
-    //   case state.error:
-    //     return "ERR";
-    //   case state.secondOperand:
-    //     return state.secondOperand;
-    //   case state.firstOperandOrResult:
-    //     return state.firstOperandOrResult
-    //   default
-    //     return 0;
-    //   }
+    // Answered, can't make this a switch-case
   };
 
   // const arrayOfOperators = Object.keys(EOperators) as EOperators[]; // alternate TS solution
@@ -93,8 +89,8 @@ const Calculator = () => {
           {display()}
         </h2>
         <div className="flex flex-row gap-4">
-          {/* how do i make the spacing here consistent, tried grow */}
-          <div className=" flex flex-col gap-4">
+          {/* Answered - guess or try grid: how do i make the spacing here consistent, tried grow */}
+          <div className=" flex w-3/4 flex-col gap-4">
             <div className="flex justify-between">
               <button
                 className="h-10 w-10 rounded-md bg-gray-900 p-2 font-bold text-amber-600 hover:opacity-70"
@@ -134,7 +130,7 @@ const Calculator = () => {
               })}
             </div>
           </div>
-          <div className="flex flex-col gap-4 ">
+          <div className="flex w-1/4 flex-col gap-4 ">
             {Object.values(EOperators).map((operator: EOperators) => {
               return (
                 <button

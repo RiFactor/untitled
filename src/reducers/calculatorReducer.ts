@@ -5,7 +5,7 @@ export enum EOperators {
   "multiply" = "*",
   "subtract" = "-",
   "add" = "+",
-  "result" = "=" // or equals?
+  "equals" = "="
 }
 
 type TState = {
@@ -14,11 +14,11 @@ type TState = {
   secondOperand?: number;
   operator?: EOperators;
   lastUpdated?: "firstOperandOrResult" | "secondOperand" | "operator" | "sum";
-  error?: boolean; // didn't know how to split this into separate state but works fine?
+  error?: boolean;
 };
 
 // {type: "display_number"; payload: number}
-// can i make the payload  type numeric values??
+// ? can i make the payload  type numeric values??
 type TAction =
   | { type: "number"; payload: number }
   | { type: "operator"; payload: EOperators }
@@ -41,14 +41,13 @@ const tryRoundingDecimalPlaces = (sum: number) => {
 
 const calculatorReducer: Reducer<TState, TAction> = (state, action) => {
   switch (action.type) {
-    case "number":
+    case "number": {
       if (state.lastUpdated === "sum") {
         // enable user to start new arithmetic operation, same behaviour as computer / phone
         state = initialState;
       }
       state.error = false; // after
       if (state.operator) {
-        // nested if statements ok?
         if (!state.secondOperand && state.secondOperand !== 0) {
           return { ...state, secondOperand: action.payload, lastUpdated: "secondOperand" };
         } else if (state.secondOperand.toString().length < 8) {
@@ -57,14 +56,17 @@ const calculatorReducer: Reducer<TState, TAction> = (state, action) => {
         }
         return { ...state }; // i think: needed b/c o/w it will try to update the firstOperand
       }
+      let newFirstOperandOrResult = action.payload;
       if (!state.firstOperandOrResult && state.firstOperandOrResult !== 0) {
-        return { ...state, firstOperandOrResult: action.payload, lastUpdated: "firstOperandOrResult" };
+        //
+        // return { ...state, firstOperandOrResult: action.payload, lastUpdated: "firstOperandOrResult" };
       } else if (state.firstOperandOrResult.toString().length < 8) {
         const singleValue = parseInt([state.firstOperandOrResult, action.payload].join(""));
-        return { ...state, firstOperandOrResult: singleValue, lastUpdated: "firstOperandOrResult" };
+        newFirstOperandOrResult = singleValue;
       }
-      return { ...state }; // default here?
-
+      // return { ...state }; // default here?
+      return { ...state, firstOperandOrResult: newFirstOperandOrResult, lastUpdated: "firstOperandOrResult" };
+    }
     case "operator":
       // see if calculation possible, o/w just store operator
       if (
@@ -73,7 +75,7 @@ const calculatorReducer: Reducer<TState, TAction> = (state, action) => {
         (state.firstOperandOrResult || state.firstOperandOrResult === 0)
       ) {
         // checking if first too jic some weird error occurs
-        // nested switch-case or pass in payload here?
+        // TODO: if-else then see if can be switch-case  -- nested switch-case or pass in payload here?
         let sum =
           state.operator === EOperators["divide"]
             ? state.firstOperandOrResult / state.secondOperand
@@ -103,7 +105,7 @@ const calculatorReducer: Reducer<TState, TAction> = (state, action) => {
           };
         }
       } else if (!state.firstOperandOrResult && state.firstOperandOrResult !== 0) {
-        return initialState; // don't just apply changes to second value if there isn't a first value
+        return { ...initialState }; // don't just apply changes to second value if there isn't a first value
       } else return { ...state, operator: action.payload, lastUpdated: "operator" }; // is last updated needed - yes b/c o/w will wipe out number!
 
     case "sign_inversion":
@@ -113,7 +115,7 @@ const calculatorReducer: Reducer<TState, TAction> = (state, action) => {
       if (state.firstOperandOrResult) {
         return { ...state, firstOperandOrResult: state.firstOperandOrResult * -1 };
       }
-      return { ...state };
+      return state;
 
     case "clear_last_value":
       if (state.lastUpdated === "firstOperandOrResult") {
@@ -126,7 +128,7 @@ const calculatorReducer: Reducer<TState, TAction> = (state, action) => {
       return state;
 
     case "clear_all":
-      return initialState; // do I need to set the state as initial state?
+      return { ...initialState }; // do I need to set the state as initial state?
 
     default: // IF NUMBER BUT MORE THAN 7 CHARACTERS, should be covered above
       console.log("how did you get here", state);

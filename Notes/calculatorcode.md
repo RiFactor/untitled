@@ -34,7 +34,7 @@ if (action.payload === EOperators.Plus) {
       return state;
     case "clear":
       state = initialState;
-      return state;
+      return state; // better to do return {...initialState}
     default:
       return state;
 
@@ -45,6 +45,7 @@ const My: FC<IProps> = props => {
 const [state, dispatch] = useReducer(reducer, initialState);
 
 return (
+
 <div>
 <b>{state.display}</b>
 
