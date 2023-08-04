@@ -15,6 +15,7 @@ const Calculator = () => {
 
   useEffect(() => {
     const handleKeyUp = (event: KeyboardEvent) => {
+      console.log(event.key);
       switch (event.key) {
         case "0":
         case "1":
@@ -28,23 +29,22 @@ const Calculator = () => {
         case "9":
           dispatch({ type: "number", payload: parseInt(event.key) });
           return;
-        case "=":
-        case "/":
-        case "-": // ToDo logic to save second operand and chain consecutive operations e.g. 5+4 = 20 -> = 24 = 28 etcs
-        case event.shiftKey && "*":
-        case event.shiftKey && "+":
-          // Question how do I handle shift key and *
+        case EOperators.divide:
+        case EOperators.add:
+        case EOperators.equals:
+        case EOperators.multiply:
+        case EOperators.subtract: // ToDo logic to save second operand and chain consecutive operations e.g. 5+4 = 20 -> = 24 = 28 etcs
           dispatch({ type: "operator", payload: event.key as EOperators });
           return;
-        case event.shiftKey && "_": // allow user to minus using shift key
-          dispatch({ type: "operator", payload: "-" as EOperators });
+        case "_": // allow user to minus using shift key
+          dispatch({ type: "operator", payload: EOperators.subtract });
           return;
         case "Enter":
-          dispatch({ type: "operator", payload: "=" as EOperators });
+          dispatch({ type: "operator", payload: EOperators.equals });
           return;
         case "c":
         case "C":
-        case "Delete": // Question -- help // ToDo add complex logic to remove last item of operand
+        case "Backspace": // Question -- help // ToDo add complex logic to remove last item of operand; or first operandOrResult
           dispatch({ type: "clear_last_value" });
           return;
         case "a":
