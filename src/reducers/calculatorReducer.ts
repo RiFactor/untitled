@@ -77,13 +77,13 @@ const calculatorReducer: Reducer<TState, TAction> = (state, action) => {
         // checking if first too jic some weird error occurs
         // TODO: if-else then see if can be switch-case  -- nested switch-case or pass in payload here?
         let sum =
-          state.operator === EOperators["divide"]
+          state.operator === EOperators.divide
             ? state.firstOperandOrResult / state.secondOperand
-            : state.operator === EOperators["multiply"]
+            : state.operator === EOperators.multiply
             ? state.firstOperandOrResult * state.secondOperand
-            : state.operator === EOperators["subtract"]
+            : state.operator === EOperators.subtract
             ? state.firstOperandOrResult - state.secondOperand
-            : state.operator === EOperators["add"]
+            : state.operator === EOperators.add
             ? state.firstOperandOrResult + state.secondOperand
             : 0; // shouldn't get here // expect default to be sum?
 
