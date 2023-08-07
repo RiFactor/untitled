@@ -125,7 +125,7 @@ const Calculator = () => {
               </button>
               <button
                 ref={node => {
-                  buttons.current["sign"] = node;
+                  buttons.current["`"] = node;
                 }}
                 className="h-10 w-10 rounded-md bg-gray-900 p-2 font-bold text-amber-600 hover:opacity-70"
                 // onClick={event => {
@@ -133,6 +133,7 @@ const Calculator = () => {
 
                 //   dispatch({ type: "sign_inversion" });
                 // }}
+
                 onClick={handleButtonClick(() => {
                   dispatch({ type: "sign_inversion" });
                 })}
