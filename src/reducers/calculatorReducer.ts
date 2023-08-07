@@ -40,7 +40,6 @@ const tryRoundingDecimalPlaces = (sum: number) => {
 
 const calculatorReducer: Reducer<TState, TAction> = (state, action) => {
   let copyState = { ...state };
-  console.log("state:", copyState);
   switch (action.type) {
     case "number": {
       if (!copyState.secondOperand && copyState.lastUpdated === "sum") {
@@ -125,28 +124,22 @@ const calculatorReducer: Reducer<TState, TAction> = (state, action) => {
 
     case "clear_last_value":
       if (state.lastUpdated === "firstOperandOrResult") {
-        console.log("clear the first value");
         return { ...copyState, firstOperandOrResult: undefined, lastUpdated: undefined };
       } else if (state.lastUpdated === "secondOperand") {
         copyState.secondOperand = 0;
         copyState.lastUpdated = "operator"; // Question -- how to not duplicate this
-        console.log("clear the second operand");
         // return { ...state, secondOperand: undefined, lastUpdated: undefined };
       } else if (state.lastUpdated === "operator") {
-        console.log("clear the operator, not really needed tbh");
         // return { ...state, operator: undefined, lastUpdated: undefined };
         copyState.operator = undefined;
         copyState.lastUpdated = "firstOperandOrResult"; // Question -- how to not duplicate this
       }
-      console.log("clearing the last value", { ...copyState });
       return { ...copyState };
 
     case "clear_all":
-      console.log("trying to clear");
       return { ...initialState }; // do I need to set the state as initial state?
 
     default: // IF NUMBER BUT MORE THAN 7 CHARACTERS, should be covered above
-      console.log("how did you get here", copyState);
       return { ...copyState }; // Question -- return the copy still?
   }
 };

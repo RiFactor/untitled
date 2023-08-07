@@ -15,7 +15,6 @@ const Calculator = () => {
 
   useEffect(() => {
     const handleKeyUp = (event: KeyboardEvent) => {
-      console.log(event.key);
       switch (event.key) {
         case "0":
         case "1":
