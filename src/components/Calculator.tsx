@@ -30,12 +30,12 @@ const Calculator = () => {
           break;
         case EOperators.divide:
         case EOperators.add:
-        // case EOperators.equals: // trying to remove bug
+        // case EOperators.equals: // ToDo: enable inclusion w/o bug on lastUpdated, need to know if it is a sum, not operator last updated
         case EOperators.multiply:
         case EOperators.subtract: // ToDo logic to save second operand and chain consecutive operations e.g. 5+4 = 20 -> = 24 = 28 etcs
           dispatch({ type: "operator", payload: event.key as EOperators });
           break;
-        case "_": // Note: allow user to subtract using shift key
+        case "_": // Note: allow user to subtract using shift key, User testing showed this was done
           dispatch({ type: "operator", payload: EOperators.subtract });
           break;
         case "Enter":
@@ -52,11 +52,11 @@ const Calculator = () => {
         case "A":
           dispatch({ type: "clear_all" });
           break;
-        case "`": // Question -- suggest alternate agreed key
+        case "`": // Question -- suggest alternate key
           dispatch({ type: "sign_inversion" });
           break;
         default:
-          break; // Question -- do I want this to be return?
+          break;
       }
       buttons.current[event.key]?.focus();
     };
@@ -69,7 +69,6 @@ const Calculator = () => {
   }, [state]);
 
   const display = () => {
-    // Answered can't make this a switch-case
     if (state.error) {
       return "ERR";
     } else if (state.secondOperand || state.secondOperand === 0) {
