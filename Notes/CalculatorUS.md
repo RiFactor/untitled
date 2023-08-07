@@ -16,62 +16,63 @@ You may not use the eval() function to execute calculations
 - [x] User can click the 'AC' button to clear all internal work areas and to set the display to 0.
 - [x] User can see 'ERR' displayed if any operation would exceed the 8 digit maximum.
 
-Bonus features
+### Bonus features
 
 - [x] User can click a '+/-' button to change the sign of the number that is currently displayed.
 - [] User can see a decimal point ('.') button on the entry pad to that allows floating point numbers up to 3 places to be entered and operations to be carried out to the maximum number of decimal places entered for any one number.
 
 ## Calculator:
 
+Qs:
+
+- Make numbers an enum?
+- C / AC are being dispatched as separate actions
+
 ### Notes
 
 use window listener b/c not a specific input field
 clean up listener in use effect
 
-### Fix
+| Revisions                                                                                | Category  | Type                |
+| ---------------------------------------------------------------------------------------- | --------- | ------------------- |
+| on hover & on click styling / animation                                                  |           |                     |
+| C for operation: just don't bother: just replace or retain when clicked                  |           |                     |
+| [] add shadow on buttons                                                                 | Button    | Styling             |
+| on hover & on click styling / animation                                                  | Button    | Code                |
+| create reuable button component                                                          | BUtton    | Ri-factor           |
+| colour contrast in dark + light mode - TW styling                                        | Dark Mode | Code                |
+| help w/ Chakra switch Chrome WAVE tool error                                             | Dark Mode | Accesibility        |
+| Replace Dark Mode text w/ sun and moon symbols                                           | Styling   |                     |
+| Add Test for Reducer                                                                     | Reducer   | Tests               |
+| Break up Reducer                                                                         | Reducer   | Advanced Code       |
+| Pressing equals should remember last operation and continue e.g. 56 + 2 = 58 => 60 => 62 | Logic     | Extra Functionality |
+| Add decimal and functionality                                                            | Logic     | Bonus Feature       |
 
-- []1960 / 3 => truncate decimal places to display within 8-digit limit
+### Done:
 
-## Styling:
-
-- [] add shadow on buttons
-  ## Extra Features:
-- [] on hover & on click styling / animation
-- [] C for operation: just don't bother: just replace or retain when clicked
-- [] accessibility - keyboard use
-  ## Ri-factor:
-- [] button component
-- [] extract reusable functions
+- [x]accessibility - keyboard use
+- [x] 1960 / 3 => truncate decimal places to display within 8-digit limit
 
 // EdgeCase: enter number, then operator and clear operator w/o selecting a new operator: enter number should clear prev number
 // EdgeCase: above - iPhone will just remember the operator if a new one isn't provided
 // OR just overwrite operator, don't need clear function for it! :)
 
-### Accessiblity
-
-- [] colour contrast in dark + light mode
-- [] help w/ Chakra switch Chrome WAVE tool error
-
 ### Tips:
 
-Switch-case
-Always return default state, returning void will cause a crash so don’t do that
-Don’t add random elements to reducer e.g. dice or date object (bc random)
-Special characters can lead to errors, better to use words
-Can test reducer
-~ advanced: can break up reducers
+- Switch-case
+  - If no change: Always return at least the default state, returning void will cause a crash so don’t do that
+  - Should always have an initial state of {}, instead of declaring {} in multiple places, reference same initial empty state multiple times
+  - Shallow copy state intially and reference this
+  - Shallow copy state when returning also
+  - Remember to reference / conditionally check / use etc the shallow copied state throughout o/w will be comparing diff states
+- Don’t add random elements to reducer e.g. dice or date object (bc random)
+- Special characters can lead to errors, better to use words (calculator symbols)
+- Specify types!
+- Make items optional: easier for empty object
+- Should separate render from state logic :)
+- FYI: typeTAction adds pipe at the start for multiple Ors
+- LHS of enum is used for calculations, RHS for display
 
-Specify types
-Make items optional
-
-Should separate render from state logic
-
-typeTAction adds pipe at the start for multiple Ors
-
-LHS of enum is used for calculations, RHS for display
-
-Should always have an initial state b/c If clearing instead of declaring {} in multiple places, reference multiple initial states
-
-Make numbers an enum?
-
-C / AC are being dispatched as separate actions
+- Don't create chains of ternary operators as this becomes difficult to read, better to write if...else statements
+  - If poss turn if...else statements into switch-case statements
+  - but need to comparing a single item to do so, o/w leave as else-if statement
