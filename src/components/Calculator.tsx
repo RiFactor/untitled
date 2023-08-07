@@ -1,17 +1,17 @@
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useRef, MouseEventHandler } from "react";
 import calculatorReducer, { EOperators } from "reducers/calculatorReducer";
-// LOGIC to cover: essentially clear operations when typing new number when first result saved [done?]
-
-// window.addEventListener("keydown"); // Answered -- want to get key event listeners (using window b/c nt specific text field) // ensure event listener stops when on diff route useeffect w/ cleanup
-// DONE stop listening to keyboard when navigation away -> clean up
-// DONE only read values once; THIS WILL resolve the ERR not displaying when using keyboard
-
-// window.addEventListener;("keypress", )
 
 const Calculator = () => {
   const [state, dispatch] = useReducer(calculatorReducer, {});
-  const numericValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; // leave these as they are, not enum
+  const numericValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; // Question - explain why : leave these as they are, not enum
   const reverseNumericValues = numericValues.reverse();
+  const buttons = useRef<Record<string, HTMLButtonElement | null>>({});
+
+  const handleButtonClick: (fn: () => void) => MouseEventHandler<HTMLButtonElement> = fn => event => {
+    if (event.nativeEvent instanceof PointerEvent && !event.nativeEvent.pointerType) return;
+
+    fn();
+  };
 
   useEffect(() => {
     const handleKeyUp = (event: KeyboardEvent) => {
@@ -28,35 +28,38 @@ const Calculator = () => {
         case "8":
         case "9":
           dispatch({ type: "number", payload: parseInt(event.key) });
-          return;
+          break;
         case EOperators.divide:
         case EOperators.add:
-        case EOperators.equals:
+        // case EOperators.equals: // trying to remove bug
         case EOperators.multiply:
         case EOperators.subtract: // ToDo logic to save second operand and chain consecutive operations e.g. 5+4 = 20 -> = 24 = 28 etcs
           dispatch({ type: "operator", payload: event.key as EOperators });
-          return;
-        case "_": // allow user to minus using shift key
+          break;
+        case "_": // Note: allow user to subtract using shift key
           dispatch({ type: "operator", payload: EOperators.subtract });
-          return;
+          break;
         case "Enter":
+          // event.preventDefault();
+          // buttons.current["="]?.focus();
           dispatch({ type: "operator", payload: EOperators.equals });
-          return;
+          break;
         case "c":
         case "C":
-        case "Backspace": // Question -- help // ToDo add complex logic to remove last item of operand; or first operandOrResult
+        case "Backspace": // ToDo add complex logic to remove last item of operand; or first operandOrResult
           dispatch({ type: "clear_last_value" });
-          return;
+          break;
         case "a":
         case "A":
           dispatch({ type: "clear_all" });
-          return;
-        case "`": // or alternate agreed key
+          break;
+        case "`": // Question -- suggest alternate agreed key
           dispatch({ type: "sign_inversion" });
-          return;
+          break;
         default:
           break; // Question -- do I want this to be return?
       }
+      buttons.current[event.key]?.focus();
     };
 
     window.addEventListener("keyup", handleKeyUp);
@@ -67,19 +70,19 @@ const Calculator = () => {
   }, [state]);
 
   const display = () => {
-    //TODO if-else
-    return state.error
-      ? "ERR"
-      : state.secondOperand || state.secondOperand === 0
-      ? state.secondOperand
-      : state.firstOperandOrResult || state.firstOperandOrResult === 0
-      ? state.firstOperandOrResult
-      : 0;
-
-    // Answered, can't make this a switch-case
+    // Answered can't make this a switch-case
+    if (state.error) {
+      return "ERR";
+    } else if (state.secondOperand || state.secondOperand === 0) {
+      return state.secondOperand;
+    } else if (state.firstOperandOrResult || state.firstOperandOrResult === 0) {
+      return state.firstOperandOrResult;
+    } else {
+      return 0;
+    }
   };
 
-  // const arrayOfOperators = Object.keys(EOperators) as EOperators[]; // alternate TS solution
+  // const arrayOfOperators = Object.keys(EOperators) as EOperators[]; // NOTE: alternate TS solution
 
   return (
     <main className="gap-4">
@@ -89,28 +92,51 @@ const Calculator = () => {
           {display()}
         </h2>
         <div className="flex flex-row gap-4">
-          {/* Answered - guess or try grid: how do i make the spacing here consistent, tried grow */}
+          {/* TODO - guess values or try grid */}
           <div className=" flex w-3/4 flex-col gap-4">
             <div className="flex justify-between">
               <button
-                className="h-10 w-10 rounded-md bg-gray-900 p-2 font-bold text-amber-600 hover:opacity-70"
-                onClick={() => {
-                  dispatch({ type: "clear_all" });
+                ref={node => {
+                  buttons.current["a"] = node;
+                  buttons.current["A"] = node; // QUESTION -- can you do this?
                 }}
+                className="h-10 w-10 rounded-md bg-gray-900 p-2 font-bold text-amber-600 hover:opacity-70"
+                onClick={handleButtonClick(() => {
+                  dispatch({ type: "clear_all" });
+                })}
               >
                 AC
               </button>
               <button
+                ref={node => {
+                  buttons.current["c"] = node;
+                  buttons.current["C"] = node;
+                }}
                 className="h-10 w-10 rounded-md bg-gray-900 p-2 font-bold text-amber-600 hover:opacity-70"
-                onClick={() => dispatch({ type: "clear_last_value" })}
+                // onClick={event => {
+                //   if (event.nativeEvent instanceof PointerEvent && !event.nativeEvent.pointerType) return;
+
+                //   dispatch({ type: "clear_last_value" });
+                // }}
+                onClick={handleButtonClick(() => {
+                  dispatch({ type: "clear_last_value" });
+                })}
               >
                 C
               </button>
               <button
-                className="h-10 w-10 rounded-md bg-gray-900 p-2 font-bold text-amber-600 hover:opacity-70"
-                onClick={() => {
-                  dispatch({ type: "sign_inversion" });
+                ref={node => {
+                  buttons.current["sign"] = node;
                 }}
+                className="h-10 w-10 rounded-md bg-gray-900 p-2 font-bold text-amber-600 hover:opacity-70"
+                // onClick={event => {
+                //   if (event.nativeEvent instanceof PointerEvent && !event.nativeEvent.pointerType) return;
+
+                //   dispatch({ type: "sign_inversion" });
+                // }}
+                onClick={handleButtonClick(() => {
+                  dispatch({ type: "sign_inversion" });
+                })}
               >
                 +/-
               </button>
@@ -120,9 +146,15 @@ const Calculator = () => {
               {reverseNumericValues.map(number => {
                 return (
                   <button
+                    ref={node => {
+                      buttons.current[number] = node;
+                    }}
                     className="h-10 w-10 rounded-md bg-gray-900 p-2 font-bold text-zinc-100 hover:opacity-70"
                     key={number}
-                    onClick={() => dispatch({ type: "number", payload: number })}
+                    // onClick={() => dispatch({ type: "number", payload: number })}
+                    onClick={handleButtonClick(() => {
+                      dispatch({ type: "number", payload: number });
+                    })}
                   >
                     {number}
                   </button>
@@ -134,11 +166,17 @@ const Calculator = () => {
             {Object.values(EOperators).map((operator: EOperators) => {
               return (
                 <button
+                  ref={node => {
+                    buttons.current[operator] = node;
+                  }}
                   className="h-10 w-10 rounded-md bg-gray-900 p-2 font-bold text-amber-600 hover:opacity-70"
                   key={operator}
-                  onClick={() => {
+                  // onClick={() => {
+                  //   dispatch({ type: "operator", payload: operator });
+                  // }}
+                  onClick={handleButtonClick(() => {
                     dispatch({ type: "operator", payload: operator });
-                  }}
+                  })}
                 >
                   {operator}
                 </button>
