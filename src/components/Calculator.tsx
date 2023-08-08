@@ -91,7 +91,7 @@ const Calculator = () => {
         </h2>
         <div className="flex flex-row gap-4">
           {/* TODO - guess values or try grid */}
-          <div className=" flex w-3/4 flex-col gap-4">
+          <div className=" flex w-4/5 flex-col gap-4">
             <div className="flex justify-between">
               <button
                 ref={node => {
@@ -161,7 +161,7 @@ const Calculator = () => {
               })}
             </div>
           </div>
-          <div className="flex w-1/4 flex-col gap-4 ">
+          <div className="flex w-1/5 flex-col gap-4 ">
             {Object.values(EOperators).map((operator: EOperators) => {
               return (
                 <button
