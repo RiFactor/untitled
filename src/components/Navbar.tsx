@@ -19,6 +19,14 @@ const Navbar = () => {
         >
           Calculator
         </NavLink>
+        <NavLink
+          className={({ isActive }) =>
+            `nav-link font-bold w-18 ${isActive && "dark:text-cyan-300 font-bold underline"} `
+          }
+          to="/drawing-pad"
+        >
+          Drawing Pad
+        </NavLink>
       </div>
       <ColorModeSwitch />
     </nav>
