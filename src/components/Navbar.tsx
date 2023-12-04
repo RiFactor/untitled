@@ -13,6 +13,7 @@ const Navbar = () => {
         <NavButton name="Calculator" to="calculator"></NavButton>
         <NavButton name="Drawing Pad" to="drawing-pad"></NavButton>
         <NavButton name="Form" to="form"></NavButton>
+        <NavButton name="RA" to="react-admin"></NavButton>
       </div>
       <ColorModeSwitch />
     </nav>

@@ -4,6 +4,7 @@ import HomePage from "./pages/HomePage";
 import Calculator from "./components/Calculator";
 import ErrorPage from "pages/ErrorPage";
 import DrawingPad from "components/DrawingPad";
+import ReactAdmin from "components/ReactAdmin";
 
 const router = createBrowserRouter([
   {
@@ -14,7 +15,8 @@ const router = createBrowserRouter([
       { index: true, element: <HomePage /> },
       { path: "calculator", element: <Calculator /> },
       { path: "drawing-pad", element: <DrawingPad /> },
-      { path: "form", element: <Form /> }
+      { path: "form", element: <Form /> },
+      { path: "react-admin", element: <ReactAdmin /> }
     ]
   }
 ]);
