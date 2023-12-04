@@ -5,6 +5,7 @@ const DrawingPad = () => {
   return (
     <main className="flex flex-col p-5">
       <h1>Drawing Pad</h1>
+      <p> Glitch: appears on refresh</p>
       <br />
       {/* side bar for colour picker */}
       <aside>
