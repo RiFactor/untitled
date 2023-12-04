@@ -12,6 +12,7 @@ const Navbar = () => {
         </NavButton>
         <NavButton name="Calculator" to="calculator"></NavButton>
         <NavButton name="Drawing Pad" to="drawing-pad"></NavButton>
+        <NavButton name="Form" to="form"></NavButton>
       </div>
       <ColorModeSwitch />
     </nav>

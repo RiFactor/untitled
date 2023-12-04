@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { Form, createBrowserRouter } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import HomePage from "./pages/HomePage";
 import Calculator from "./components/Calculator";
@@ -13,7 +13,8 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <HomePage /> },
       { path: "calculator", element: <Calculator /> },
-      { path: "drawing-pad", element: <DrawingPad /> }
+      { path: "drawing-pad", element: <DrawingPad /> },
+      { path: "form", element: <Form /> }
     ]
   }
 ]);
