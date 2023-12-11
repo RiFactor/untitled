@@ -6,6 +6,7 @@ import ErrorPage from "pages/ErrorPage";
 import DrawingPad from "components/DrawingPad";
 import ReactAdmin from "components/ReactAdmin";
 import Gauge from "components/Gauge";
+import CustomGauge from "components/CustomGauge";
 
 const router = createBrowserRouter([
   {
@@ -18,7 +19,8 @@ const router = createBrowserRouter([
       { path: "drawing-pad", element: <DrawingPad /> },
       { path: "form", element: <Form /> },
       { path: "react-admin", element: <ReactAdmin /> },
-      { path: "gauge", element: <Gauge /> }
+      { path: "gauge", element: <Gauge /> },
+      { path: "custom-gauge", element: <CustomGauge /> }
     ]
   }
 ]);

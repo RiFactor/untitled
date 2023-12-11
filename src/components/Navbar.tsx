@@ -15,6 +15,7 @@ const Navbar = () => {
         <NavButton name="Form" to="form"></NavButton>
         <NavButton name="RA" to="react-admin"></NavButton>
         <NavButton name="Gauge" to="gauge"></NavButton>
+        <NavButton name="Custom Gauge" to="custom-gauge"></NavButton>
       </div>
       <ColorModeSwitch />
     </nav>
