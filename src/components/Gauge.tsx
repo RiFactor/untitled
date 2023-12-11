@@ -34,7 +34,7 @@ const Gauge = () => {
       value: "cornflowerblue"
     },
     strokeLineCap: {
-      value: "round",
+      value: "square",
       options: ["butt", "round", "square"]
     }
   });
